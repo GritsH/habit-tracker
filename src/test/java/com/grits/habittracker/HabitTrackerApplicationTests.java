@@ -1,4 +1,4 @@
-package com.grits.habit_tracker;
+package com.grits.habittracker;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
