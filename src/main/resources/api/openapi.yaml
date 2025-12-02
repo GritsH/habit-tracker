@@ -218,6 +218,33 @@ paths:
         '404':
           description: Habit not found
 
+  /v1/habits/{id}/streak:
+    get:
+      tags:
+        - habit
+      summary: Get streak for a habit
+      description: Get streak history/statistics for a habit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  completions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Streak'
+        '404':
+          description: Habit not found
 
 
 components:
@@ -373,3 +400,18 @@ components:
         isSkipped:
           type: boolean
           default: false
+
+    Streak:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 11
+        currentStreak:
+          type: integer
+          format: int64
+          example: 12
+        longestStreak:
+          type: integer
+          format: int64
+          example: 35
