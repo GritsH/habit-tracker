@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "")
+@Table(name = "habit_frequency")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +18,6 @@ public class HabitFrequency {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "frequency_name")
     private String name;
 }

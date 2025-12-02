@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "")
+@Table(name = "habit_completion")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +16,9 @@ public class HabitCompletion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "created_at")
+    private Date createdAt;
 
     @Column(name = "completed_at")
     private Date completedAt;

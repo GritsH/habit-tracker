@@ -27,7 +27,7 @@ public class HabitCompletionServiceImpl implements HabitCompletionService {
 
     @Override
     public List<HabitCompletion> getAll() {
-        return repository.getAll();
+        return repository.findAll();
     }
 
     @Override

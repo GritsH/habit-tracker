@@ -20,7 +20,7 @@ public class HabitFrequencyServiceImpl implements HabitFrequencyService {
 
     @Override
     public List<HabitFrequency> getAll() {
-        return repository.getAll();
+        return repository.findAll();
     }
 
     @Override

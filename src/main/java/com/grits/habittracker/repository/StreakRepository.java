@@ -11,8 +11,6 @@ import java.util.Optional;
 @Repository
 public interface StreakRepository extends JpaRepository<Streak, Long> {
 
-    List<Streak> getAll();
-
     Optional<Streak> findById(Long id);
 
     Optional<Streak> findByHabit(Habit habit);

@@ -9,7 +9,5 @@ import java.util.List;
 @Repository
 public interface HabitFrequencyRepository extends JpaRepository<HabitFrequency, Long> {
 
-    List<HabitFrequency> getAll();
-
     List<HabitFrequency> getByNameContainingIgnoreCase(String name);
 }

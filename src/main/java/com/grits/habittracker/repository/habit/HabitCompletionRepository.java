@@ -11,8 +11,6 @@ import java.util.List;
 @Repository
 public interface HabitCompletionRepository extends JpaRepository<HabitCompletion, Long> {
 
-    List<HabitCompletion> getAll();
-
     List<HabitCompletion> getAllByCompletedAt(Date completedAt);
 
     List<HabitCompletion> findAllByHabit_Id(Long habitId);

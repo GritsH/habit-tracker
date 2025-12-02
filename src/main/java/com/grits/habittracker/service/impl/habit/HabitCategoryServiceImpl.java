@@ -20,7 +20,7 @@ public class HabitCategoryServiceImpl implements HabitCategoryService {
 
     @Override
     public List<HabitCategory> getAll() {
-        return repository.getAll();
+        return repository.findAll();
     }
 
     @Override

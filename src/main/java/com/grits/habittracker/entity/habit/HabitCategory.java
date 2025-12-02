@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "")
+@Table(name = "habit_category")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +15,6 @@ public class HabitCategory {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "category_name")
     private String categoryName;
 }

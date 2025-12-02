@@ -7,7 +7,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "")
+@Table(name = "habit")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,12 +18,12 @@ public class Habit {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "habit_name")
     private String name;
 
     @Column(name = "created_at")
     private Date createdAt;
-    @Column(name = "description")
+    @Column(name = "habit_description")
     private String description;
 
     @ManyToOne

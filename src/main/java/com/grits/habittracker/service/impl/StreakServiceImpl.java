@@ -27,7 +27,7 @@ public class StreakServiceImpl implements StreakService {
 
     @Override
     public List<Streak> getAll() {
-        return repository.getAll();
+        return repository.findAll();
     }
 
     @Override
