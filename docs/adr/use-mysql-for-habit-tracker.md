@@ -25,7 +25,7 @@ The application has a clear relational data:
 * One-to-one: Habit -> Streak
 ### 2. ACID Compliance Requirements
 * Completion record and streak update must be atomic
-* User and all associated habits + completions must delete together
+* User and all associated habits + completions must be deleted together
 * Referential integrity - no completions without a habit, no habit without a user
 * Two completions for the same habit/day must not create duplicates
 ### 3. Experience and Ecosystem
@@ -39,7 +39,7 @@ The application has a clear relational data:
 1. Foreign key enforcement
 2. Native JOIN operations
 3. Mature ecosystem
-4. Team familiarity
+4. Personal familiarity
 ### Negative
 1. Schema rigidity
 2. Horizontal scaling more complex than NoSQL alternatives
