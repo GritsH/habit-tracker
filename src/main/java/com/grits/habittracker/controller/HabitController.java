@@ -1,9 +1,10 @@
 package com.grits.habittracker.controller;
 
 
-import com.grits.habittracker.model.HabitDto;
+import com.grits.habittracker.entity.Streak;
+import com.grits.habittracker.entity.habit.Habit;
+import com.grits.habittracker.entity.habit.HabitCompletion;
 import com.grits.habittracker.model.HabitCompletionDto;
-import com.grits.habittracker.model.StreakDto;
 import com.grits.habittracker.model.request.HabitRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +33,7 @@ public class HabitController {
             summary = "Get all habits",
             description = "Retrieves a list of habits"
     )
-    public ResponseEntity<List<HabitDto>> getAllHabits() { //todo return Habit entity
+    public ResponseEntity<List<Habit>> getAllHabits() {
         return ResponseEntity.ok(new ArrayList<>());
     }
 
@@ -77,7 +78,7 @@ public class HabitController {
             summary = "Get history for a habit",
             description = "Get all completion records for a habit"
     )
-    public ResponseEntity<List<HabitCompletionDto>> getHabitLogHistory(@PathVariable UUID id) { //todo return HabitCompletion entity
+    public ResponseEntity<List<HabitCompletion>> getHabitLogHistory(@PathVariable UUID id) {
         return ResponseEntity.ok(new ArrayList<>());
     }
 
@@ -86,7 +87,7 @@ public class HabitController {
             summary = "Show a habit streak",
             description = "Shows statistics for habit completions"
     )
-    public ResponseEntity<StreakDto> getHabitStreakHistory(@PathVariable UUID id) { //todo return Streak entity
-        return ResponseEntity.ok(new StreakDto());
+    public ResponseEntity<Streak> getHabitStreakHistory(@PathVariable UUID id) {
+        return ResponseEntity.ok(new Streak());
     }
 }
