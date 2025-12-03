@@ -1,6 +1,5 @@
 package com.grits.habittracker.service.impl.habit;
 
-import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.entity.habit.HabitCompletion;
 import com.grits.habittracker.repository.habit.HabitCompletionRepository;
 import com.grits.habittracker.service.habit.HabitCompletionService;
@@ -37,11 +36,6 @@ public class HabitCompletionServiceImpl implements HabitCompletionService {
 
     @Override
     public List<HabitCompletion> findAllByHabitId(Long habitId) {
-        return repository.findAllByHabit_Id(habitId);
-    }
-
-    @Override
-    public List<HabitCompletion> findAllByHabit(Habit habit) {
-        return repository.findAllByHabit(habit);
+        return repository.findAllByHabitId(habitId);
     }
 }

@@ -25,6 +25,6 @@ public class HabitCategoryServiceImpl implements HabitCategoryService {
 
     @Override
     public List<HabitCategory> findAllByCategoryNameContaining(String categoryName) {
-        return repository.findAllByCategoryNameContainingIgnoreCase(categoryName);
+        return repository.findAllByCategoryNameContaining(categoryName.toUpperCase());
     }
 }

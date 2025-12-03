@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface HabitCategoryRepository extends JpaRepository<HabitCategory, Long> {
 
-    List<HabitCategory> findAllByCategoryNameContainingIgnoreCase(String categoryName);
+    List<HabitCategory> findAllByCategoryNameContaining(String categoryName);
 }

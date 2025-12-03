@@ -1,6 +1,5 @@
 package com.grits.habittracker.repository.habit;
 
-import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.entity.habit.HabitCompletion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,7 +12,5 @@ public interface HabitCompletionRepository extends JpaRepository<HabitCompletion
 
     List<HabitCompletion> getAllByCompletedAt(Date completedAt);
 
-    List<HabitCompletion> findAllByHabit_Id(Long habitId);
-
-    List<HabitCompletion> findAllByHabit(Habit habit);
+    List<HabitCompletion> findAllByHabitId(Long habitId);
 }

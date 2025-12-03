@@ -1,7 +1,6 @@
 package com.grits.habittracker.service.impl;
 
 import com.grits.habittracker.entity.Streak;
-import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.repository.StreakRepository;
 import com.grits.habittracker.service.StreakService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +35,7 @@ public class StreakServiceImpl implements StreakService {
     }
 
     @Override
-    public Optional<Streak> findByHabit(Habit habit) {
-        return repository.findByHabit(habit);
-    }
-
-    @Override
     public Optional<Streak> findByHabitId(Long id) {
-        return repository.findByHabit_Id(id);
+        return repository.findByHabitId(id);
     }
 }

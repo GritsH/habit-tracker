@@ -25,6 +25,6 @@ public class HabitFrequencyServiceImpl implements HabitFrequencyService {
 
     @Override
     public List<HabitFrequency> getByNameContaining(String name) {
-        return repository.getByNameContainingIgnoreCase(name);
+        return repository.getByNameContaining(name.toUpperCase());
     }
 }

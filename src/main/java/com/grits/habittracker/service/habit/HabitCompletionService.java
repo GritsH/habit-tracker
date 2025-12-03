@@ -1,6 +1,5 @@
 package com.grits.habittracker.service.habit;
 
-import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.entity.habit.HabitCompletion;
 
 import java.util.Date;
@@ -15,6 +14,4 @@ public interface HabitCompletionService {
     List<HabitCompletion> getAllByCompletedAt(Date completedAt);
 
     List<HabitCompletion> findAllByHabitId(Long habitId);
-
-    List<HabitCompletion> findAllByHabit(Habit habit);
 }
