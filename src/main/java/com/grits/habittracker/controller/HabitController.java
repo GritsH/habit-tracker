@@ -7,15 +7,16 @@ import com.grits.habittracker.model.HabitDto;
 import com.grits.habittracker.model.StreakDto;
 import com.grits.habittracker.model.request.CreateHabitRequest;
 import com.grits.habittracker.model.request.LogCompletionRequest;
+import com.grits.habittracker.model.request.UpdateHabitRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,7 +43,7 @@ public class HabitController {
             summary = "Create a new habit",
             description = "Add a new habit for user"
     )
-    public ResponseEntity<Void> createNewHabit(@RequestBody CreateHabitRequest habitDto) {
+    public ResponseEntity<Void> createNewHabit(@RequestBody CreateHabitRequest createHabitRequest) {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -55,12 +56,12 @@ public class HabitController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @Operation(
             summary = "Update a habit",
             description = "Updates a specific habit"
     )
-    public ResponseEntity<Void> updateHabit(@PathVariable String id, @RequestBody CreateHabitRequest habitDto) {
+    public ResponseEntity<Void> updateHabit(@PathVariable String id, @RequestBody UpdateHabitRequest updateHabitRequest) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -69,7 +70,7 @@ public class HabitController {
             summary = "Log a habit completion",
             description = "Record that the habit was completed"
     )
-    public ResponseEntity<Void> logCompletion(@PathVariable String id, @RequestBody LogCompletionRequest habitCompletionDto) {
+    public ResponseEntity<Void> logCompletion(@PathVariable String id, @RequestBody LogCompletionRequest logCompletionRequest) {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
