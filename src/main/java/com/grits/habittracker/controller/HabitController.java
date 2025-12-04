@@ -1,11 +1,11 @@
 package com.grits.habittracker.controller;
 
 
-import com.grits.habittracker.entity.Streak;
-import com.grits.habittracker.entity.habit.Habit;
-import com.grits.habittracker.entity.habit.HabitCompletion;
 import com.grits.habittracker.model.HabitCompletionDto;
-import com.grits.habittracker.model.request.HabitRequestDto;
+import com.grits.habittracker.model.HabitDto;
+import com.grits.habittracker.model.StreakDto;
+import com.grits.habittracker.model.request.CreateHabitRequest;
+import com.grits.habittracker.model.request.LogCompletionRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/habits")
@@ -33,7 +32,7 @@ public class HabitController {
             summary = "Get all habits",
             description = "Retrieves a list of habits"
     )
-    public ResponseEntity<List<Habit>> getAllHabits() {
+    public ResponseEntity<List<HabitDto>> getAllHabits() {
         return ResponseEntity.ok(new ArrayList<>());
     }
 
@@ -42,7 +41,7 @@ public class HabitController {
             summary = "Create a new habit",
             description = "Add a new habit for user"
     )
-    public ResponseEntity<Void> createNewHabit(@RequestBody HabitRequestDto habitDto) {
+    public ResponseEntity<Void> createNewHabit(@RequestBody CreateHabitRequest habitDto) {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -51,7 +50,7 @@ public class HabitController {
             summary = "Remove a habit",
             description = "Deletes the habit if found"
     )
-    public ResponseEntity<Void> deleteHabit(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteHabit(@PathVariable String id) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -60,7 +59,7 @@ public class HabitController {
             summary = "Update a habit",
             description = "Updates a specific habit"
     )
-    public ResponseEntity<Void> updateHabit(@PathVariable UUID id, @RequestBody HabitRequestDto habitDto) {
+    public ResponseEntity<Void> updateHabit(@PathVariable String id, @RequestBody CreateHabitRequest habitDto) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -69,7 +68,7 @@ public class HabitController {
             summary = "Log a habit completion",
             description = "Record that the habit was completed"
     )
-    public ResponseEntity<Void> logCompletion(@PathVariable UUID id, @RequestBody HabitCompletionDto habitCompletionDto) {
+    public ResponseEntity<Void> logCompletion(@PathVariable String id, @RequestBody LogCompletionRequest habitCompletionDto) {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -78,7 +77,7 @@ public class HabitController {
             summary = "Get history for a habit",
             description = "Get all completion records for a habit"
     )
-    public ResponseEntity<List<HabitCompletion>> getHabitLogHistory(@PathVariable UUID id) {
+    public ResponseEntity<List<HabitCompletionDto>> getHabitLogHistory(@PathVariable String id) {
         return ResponseEntity.ok(new ArrayList<>());
     }
 
@@ -87,7 +86,7 @@ public class HabitController {
             summary = "Show a habit streak",
             description = "Shows statistics for habit completions"
     )
-    public ResponseEntity<Streak> getHabitStreakHistory(@PathVariable UUID id) {
-        return ResponseEntity.ok(new Streak());
+    public ResponseEntity<StreakDto> getHabitStreakHistory(@PathVariable String id) {
+        return ResponseEntity.ok(StreakDto.fromEntity());
     }
 }

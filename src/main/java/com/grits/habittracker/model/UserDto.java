@@ -1,10 +1,11 @@
 package com.grits.habittracker.model;
 
-import java.util.UUID;
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
+@Builder
 public class UserDto {
-
-    private UUID id;
 
     private String email;
 
@@ -15,4 +16,8 @@ public class UserDto {
     private String lastName;
 
     private String username;
+
+    public static UserDto fromEntity(){
+        return UserDto.builder().build();
+    }
 }

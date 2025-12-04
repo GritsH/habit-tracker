@@ -1,21 +1,29 @@
 package com.grits.habittracker.model;
 
-import java.util.Date;
-import java.util.UUID;
+import lombok.Builder;
+import lombok.Getter;
 
+import java.time.LocalDate;
+
+@Getter
+@Builder
 public class HabitDto {
 
-    private UUID id;
+    private String id;
 
     private String name;
 
-    private Date createdAt;
+    private LocalDate createdAt;
 
     private String description;
 
-    private UUID userId;
+    private UserDto user;
 
     private String frequency;
 
     private String habitCategory;
+
+    public static HabitDto fromEntity() {
+        return HabitDto.builder().build();
+    }
 }

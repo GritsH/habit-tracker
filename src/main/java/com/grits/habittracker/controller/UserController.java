@@ -1,8 +1,8 @@
 package com.grits.habittracker.controller;
 
-import com.grits.habittracker.entity.User;
-import com.grits.habittracker.model.request.LoginRequestDto;
-import com.grits.habittracker.model.request.SignupRequestDto;
+import com.grits.habittracker.model.UserDto;
+import com.grits.habittracker.model.request.LoginRequest;
+import com.grits.habittracker.model.request.SignupRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class UserController {
             summary = "Register a new user",
             description = "Create a new user"
     )
-    public ResponseEntity<Void> signup(@RequestBody SignupRequestDto signupRequest) {
+    public ResponseEntity<Void> signup(@RequestBody SignupRequest signupRequest) {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -33,8 +33,8 @@ public class UserController {
             summary = "Authenticate user",
             description = "Log in user"
     )
-    public ResponseEntity<User> login(@RequestBody LoginRequestDto loginRequest) {
-        return ResponseEntity.ok(new User());
+    public ResponseEntity<UserDto> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(UserDto.fromEntity());
     }
 
     @GetMapping("/users/{username}")
@@ -42,8 +42,8 @@ public class UserController {
             summary = "Get a user by username",
             description = "Returns a single user if found"
     )
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        return ResponseEntity.ok(new User());
+    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(UserDto.fromEntity());
     }
 
 }
