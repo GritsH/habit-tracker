@@ -1,25 +1,21 @@
 package com.grits.habittracker.model.request;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Value;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+import java.time.LocalDate;
+
+@Value
 public class CreateHabitRequest {
 
-    @NotBlank
-    private String name;
+    String userId;
 
-    private String description;
+    String name;
 
-    @NotBlank
-    private String frequency;
+    String description;
 
-    @NotBlank
-    private String habitCategory;
+    LocalDate startDate;
+
+    String frequency;
+
+    String habitCategory;
 }

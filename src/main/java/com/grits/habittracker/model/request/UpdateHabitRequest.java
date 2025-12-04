@@ -1,21 +1,19 @@
 package com.grits.habittracker.model.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Value;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+import java.time.LocalDate;
+
+@Value
 public class UpdateHabitRequest {
 
-    private String name;
+    String name;
 
-    private String description;
+    String description;
 
-    private String frequency;
+    LocalDate startDate;
 
-    private String habitCategory;
+    String frequency;
+
+    String habitCategory;
 }
