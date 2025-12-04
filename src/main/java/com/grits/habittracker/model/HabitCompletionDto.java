@@ -1,5 +1,6 @@
 package com.grits.habittracker.model;
 
+import com.grits.habittracker.entity.habit.HabitCompletion;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,8 +16,12 @@ public class HabitCompletionDto {
 
     private boolean isSkipped;
 
-    public static HabitCompletionDto fromEntity(){
-        return HabitCompletionDto.builder().build();
+    public static HabitCompletionDto fromEntity(HabitCompletion entity) {
+        return HabitCompletionDto.builder()
+                .completedAt(entity.getCompletedAt())
+                .isSkipped(entity.isSkipped())
+                .habit(HabitDto.fromEntity(entity.getHabit()))
+                .build();
     }
 
 }

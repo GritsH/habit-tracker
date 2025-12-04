@@ -1,5 +1,6 @@
 package com.grits.habittracker.controller;
 
+import com.grits.habittracker.entity.User;
 import com.grits.habittracker.model.UserDto;
 import com.grits.habittracker.model.request.LoginRequest;
 import com.grits.habittracker.model.request.SignupRequest;
@@ -34,7 +35,7 @@ public class UserController {
             description = "Log in user"
     )
     public ResponseEntity<UserDto> login(@RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(UserDto.fromEntity());
+        return ResponseEntity.ok(UserDto.fromEntity(new User()));
     }
 
     @GetMapping("/users/{username}")
@@ -43,7 +44,7 @@ public class UserController {
             description = "Returns a single user if found"
     )
     public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
-        return ResponseEntity.ok(UserDto.fromEntity());
+        return ResponseEntity.ok(UserDto.fromEntity(new User()));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.grits.habittracker.model;
 
+import com.grits.habittracker.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,7 +18,13 @@ public class UserDto {
 
     private String username;
 
-    public static UserDto fromEntity(){
-        return UserDto.builder().build();
+    public static UserDto fromEntity(User entity) {
+        return UserDto.builder()
+                .email(entity.getEmail())
+                .password(entity.getPassword())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
+                .username(entity.getUsername())
+                .build();
     }
 }

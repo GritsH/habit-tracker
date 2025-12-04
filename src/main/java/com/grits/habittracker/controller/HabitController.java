@@ -1,6 +1,7 @@
 package com.grits.habittracker.controller;
 
 
+import com.grits.habittracker.entity.Streak;
 import com.grits.habittracker.model.HabitCompletionDto;
 import com.grits.habittracker.model.HabitDto;
 import com.grits.habittracker.model.StreakDto;
@@ -87,6 +88,6 @@ public class HabitController {
             description = "Shows statistics for habit completions"
     )
     public ResponseEntity<StreakDto> getHabitStreakHistory(@PathVariable String id) {
-        return ResponseEntity.ok(StreakDto.fromEntity());
+        return ResponseEntity.ok(StreakDto.fromEntity(new Streak()));
     }
 }

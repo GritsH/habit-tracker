@@ -1,5 +1,6 @@
 package com.grits.habittracker.model;
 
+import com.grits.habittracker.entity.Streak;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,7 +14,11 @@ public class StreakDto {
 
     private HabitDto habit;
 
-    public static StreakDto fromEntity() {
-        return StreakDto.builder().build();
+    public static StreakDto fromEntity(Streak entity) {
+        return StreakDto.builder()
+                .currentStreak(entity.getCurrentStreak())
+                .longestStreak(entity.getLongestStreak())
+                .habit(HabitDto.fromEntity(entity.getHabit()))
+                .build();
     }
 }

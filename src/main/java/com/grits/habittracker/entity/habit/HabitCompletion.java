@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -26,10 +27,10 @@ public class HabitCompletion {
     private Long id;
 
     @Column(name = "created_at")
-    private Date createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "completed_at")
-    private Date completedAt;
+    private LocalDate completedAt;
 
     @Column(name = "is_skipped")
     private boolean isSkipped;
