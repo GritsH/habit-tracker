@@ -1,9 +1,9 @@
-package com.grits.habittracker.model.request;
+package com.grits.habittracker.model.response;
 
 import lombok.Value;
 
 @Value
-public class SignupRequest {
+public class UserResponse {
 
     String email;
 

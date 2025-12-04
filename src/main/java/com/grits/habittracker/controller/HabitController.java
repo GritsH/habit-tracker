@@ -1,9 +1,9 @@
 package com.grits.habittracker.controller;
 
 
-import com.grits.habittracker.model.HabitCompletionDto;
-import com.grits.habittracker.model.HabitDto;
-import com.grits.habittracker.model.StreakDto;
+import com.grits.habittracker.model.response.HabitCompletionResponse;
+import com.grits.habittracker.model.response.HabitResponse;
+import com.grits.habittracker.model.response.StreakResponse;
 import com.grits.habittracker.model.request.CreateHabitRequest;
 import com.grits.habittracker.model.request.LogCompletionRequest;
 import com.grits.habittracker.model.request.UpdateHabitRequest;
@@ -33,7 +33,7 @@ public class HabitController {
             summary = "Get all habits",
             description = "Retrieves a list of habits"
     )
-    public ResponseEntity<List<HabitDto>> getAllHabits() {
+    public ResponseEntity<List<HabitResponse>> getAllHabits() {
         return ResponseEntity.ok(new ArrayList<>());
     }
 
@@ -78,7 +78,7 @@ public class HabitController {
             summary = "Get history for a habit",
             description = "Get all completion records for a habit"
     )
-    public ResponseEntity<List<HabitCompletionDto>> getHabitLogHistory(@PathVariable String id) {
+    public ResponseEntity<List<HabitCompletionResponse>> getHabitLogHistory(@PathVariable String id) {
         return ResponseEntity.ok(new ArrayList<>());
     }
 
@@ -87,7 +87,7 @@ public class HabitController {
             summary = "Show a habit streak",
             description = "Shows statistics for habit completions"
     )
-    public ResponseEntity<StreakDto> getHabitStreakHistory(@PathVariable String id) {
-        return ResponseEntity.ok(StreakDto.fromEntity());
+    public ResponseEntity<StreakResponse> getHabitStreakHistory(@PathVariable String id) {
+        return null; // ResponseEntity.ok(new Object());
     }
 }

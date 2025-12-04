@@ -1,6 +1,6 @@
 package com.grits.habittracker.controller;
 
-import com.grits.habittracker.model.UserDto;
+import com.grits.habittracker.model.response.UserResponse;
 import com.grits.habittracker.model.request.LoginRequest;
 import com.grits.habittracker.model.request.SignupRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,8 +33,8 @@ public class UserController {
             summary = "Authenticate user",
             description = "Log in user"
     )
-    public ResponseEntity<UserDto> login(@RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(UserDto.fromEntity());
+    public ResponseEntity<UserResponse> login(@RequestBody LoginRequest loginRequest) {
+        return null; //ResponseEntity.ok(UserResponse.fromEntity());
     }
 
     @GetMapping("/users/{username}")
@@ -42,8 +42,8 @@ public class UserController {
             summary = "Get a user by username",
             description = "Returns a single user if found"
     )
-    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
-        return ResponseEntity.ok(UserDto.fromEntity());
+    public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
+        return null; //ResponseEntity.ok(UserResponse.fromEntity());
     }
 
 }
