@@ -1,14 +1,19 @@
 package com.grits.habittracker.model;
 
-import java.util.UUID;
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
+@Builder
 public class StreakDto {
-
-    private UUID id;
 
     private Integer currentStreak;
 
     private Integer longestStreak;
 
-    private UUID habitId;
+    private HabitDto habit;
+
+    public static StreakDto fromEntity() {
+        return StreakDto.builder().build();
+    }
 }

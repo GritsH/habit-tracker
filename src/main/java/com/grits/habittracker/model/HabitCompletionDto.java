@@ -1,14 +1,22 @@
 package com.grits.habittracker.model;
 
-import java.util.Date;
-import java.util.UUID;
+import lombok.Builder;
+import lombok.Getter;
 
+import java.time.LocalDate;
+
+@Getter
+@Builder
 public class HabitCompletionDto {
 
-    private UUID habitId;
+    private HabitDto habit;
 
-    private Date completedAt;
+    private LocalDate completedAt;
 
     private boolean isSkipped;
+
+    public static HabitCompletionDto fromEntity(){
+        return HabitCompletionDto.builder().build();
+    }
 
 }
