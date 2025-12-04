@@ -33,6 +33,9 @@ public class Habit {
     @Column(name = "created_at")
     private LocalDate createdAt;
 
+    @Column(name = "start_date")
+    private LocalDate startDate;
+
     @Column(name = "habit_description")
     private String description;
 

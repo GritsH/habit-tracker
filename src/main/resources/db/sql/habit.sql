@@ -2,6 +2,7 @@ create table habittracker.habit (
     id                int not null auto_increment primary key,
     habit_name        varchar(30),
     created_at        date,
+    start_date        date,
     habit_description text,
     frequency_id      int,
     habit_category_id int,
