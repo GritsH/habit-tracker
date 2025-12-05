@@ -1,4 +1,4 @@
 create table habittracker.habit_frequency (
-    id             int not null auto_increment primary key,
+    id             varchar(36) primary key default (UUID()),
     frequency_name varchar(20)
 );

@@ -1,8 +1,8 @@
 create table habittracker.user (
-    id         int not null auto_increment primary key,
+    id         varchar(36) primary key default (UUID()),
     first_name varchar(20),
     last_name  varchar(20),
-    username   varchar(20),
-    email      varchar(30),
+    username   varchar(20) unique,
+    email      varchar(30) unique,
     password   varchar(30)
 );

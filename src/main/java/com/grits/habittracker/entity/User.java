@@ -1,15 +1,20 @@
 package com.grits.habittracker.entity;
 
 
+import com.grits.habittracker.entity.habit.Habit;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -18,9 +23,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @Column(
+            name = "id",
+            length = 36,
+            updatable = false,
+            nullable = false,
+            unique = true
+    )
+    private String id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -36,4 +47,7 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Habit> habits = new ArrayList<>();
 }

@@ -2,13 +2,12 @@ package com.grits.habittracker.entity.habit;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "habit_category")
@@ -17,9 +16,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HabitCategory {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @Column(
+            name = "id",
+            length = 36,
+            updatable = false,
+            nullable = false,
+            unique = true
+    )
+    private String id;
 
     @Column(name = "category_name")
     private String name;
