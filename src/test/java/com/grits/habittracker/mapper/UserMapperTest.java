@@ -7,9 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class UserMapperTest {
 
@@ -28,18 +26,18 @@ class UserMapperTest {
 
         User user = userMapper.dtoToEntity(request);
 
-        assertNotNull(user);
-        assertEquals(request.getEmail(), user.getEmail());
-        assertEquals(request.getFirstName(), user.getFirstName());
-        assertEquals(request.getLastName(), user.getLastName());
-        assertEquals(request.getUsername(), user.getUsername());
-        assertNotNull(user.getPassword());
+        assertThat(user).isNotNull();
+        assertThat(request.getEmail()).isEqualTo(user.getEmail());
+        assertThat(request.getFirstName()).isEqualTo(user.getFirstName());
+        assertThat(request.getLastName()).isEqualTo(user.getLastName());
+        assertThat(request.getUsername()).isEqualTo(user.getUsername());
+        assertThat(user.getPassword()).isNotNull();
     }
 
     @Test
     @DisplayName("should be null if dto is null")
     void dtoToEntity_DtoNull() {
-        assertNull(userMapper.dtoToEntity(null));
+        assertThat(userMapper.dtoToEntity(null)).isNull();
     }
 
     @Test
@@ -54,16 +52,13 @@ class UserMapperTest {
 
         UserResponse response = userMapper.entityToDto(user);
 
-        assertNotNull(response);
-        assertEquals(user.getEmail(), response.getEmail());
-        assertEquals(user.getFirstName(), response.getFirstName());
-        assertEquals(user.getLastName(), response.getLastName());
-        assertEquals(user.getUsername(), response.getUsername());
+        assertThat(response).isNotNull();
+        assertThat(response).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test
     @DisplayName("should be null if entity is null")
     void entityToDto_EntityNull() {
-        assertNull(userMapper.entityToDto(null));
+        assertThat(userMapper.entityToDto(null)).isNull();
     }
 }
