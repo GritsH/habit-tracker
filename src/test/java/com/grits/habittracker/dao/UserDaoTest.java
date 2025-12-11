@@ -1,0 +1,123 @@
+package com.grits.habittracker.dao;
+
+import com.grits.habittracker.entity.User;
+import com.grits.habittracker.exception.UserAlreadyExistsException;
+import com.grits.habittracker.exception.UserNotFoundException;
+import com.grits.habittracker.model.response.UserResponse;
+import com.grits.habittracker.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class UserDaoTest {
+
+    @Mock
+    private UserRepository repository;
+
+    @InjectMocks
+    private UserDao userDao;
+
+    private UserResponse userResponse;
+    private User user;
+
+    @BeforeEach
+    void setUp() {
+        String encodedPassword = "encodedPassword123";
+
+        user = new User();
+        user.setId("id");
+        user.setEmail("test@example.com");
+        user.setPassword(encodedPassword);
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setUsername("userName!@!!");
+
+        userResponse = new UserResponse(
+                "test@example.com",
+                encodedPassword,
+                "John",
+                "Doe",
+                "userName!@!!"
+        );
+    }
+
+    @AfterEach
+    public void after() {
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    @DisplayName("should save a new user")
+    void save() {
+        userDao.saveUser(user);
+
+        verify(repository).save(user);
+    }
+
+    @Test
+    @DisplayName("should throw exception when saving with existing email")
+    void saveWithException() {
+        when(repository.save(user)).thenThrow(UserAlreadyExistsException.class);
+
+        assertThatThrownBy(() -> userDao.saveUser(user)).isInstanceOf(UserAlreadyExistsException.class);
+    }
+
+    @Test
+    @DisplayName("should find user by email")
+    void getUserByEmail() {
+        when(repository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+
+        User result = userDao.getUserByEmail("test@example.com");
+
+        assertThat(result).usingRecursiveComparison()
+                .ignoringFields("id", "habits")
+                .isEqualTo(userResponse);
+    }
+
+    @Test
+    @DisplayName("should throw exception when getting non-existent user")
+    void getByEmailWithUserException() {
+        when(repository.findByEmail("test@example.com")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userDao.getUserByEmail("test@example.com"))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User test@example.com not found");
+    }
+
+    @Test
+    @DisplayName("should find user by username")
+    void getUserByUsername() {
+        when(repository.findByUsername("userName!@!!")).thenReturn(Optional.of(user));
+
+        User result = userDao.getUserByUsername("userName!@!!");
+
+        assertThat(result).isNotNull();
+        assertThat(result).usingRecursiveComparison()
+                .ignoringFields("id", "habits")
+                .isEqualTo(userResponse);
+    }
+
+    @Test
+    @DisplayName("should not find user by invalid username and throw exception")
+    void getUserByUsernameWithException() {
+        when(repository.findByUsername("bad_username")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userDao.getUserByUsername("bad_username"))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User bad_username not found");
+    }
+}

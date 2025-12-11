@@ -1,10 +1,12 @@
 package com.grits.habittracker.controller;
 
-import com.grits.habittracker.model.response.UserResponse;
 import com.grits.habittracker.model.request.LoginRequest;
 import com.grits.habittracker.model.request.SignupRequest;
+import com.grits.habittracker.model.response.UserResponse;
+import com.grits.habittracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +21,20 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "User API")
 public class UserController {
 
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @PostMapping("/signup")
     @Operation(
             summary = "Register a new user",
             description = "Create a new user"
     )
     public ResponseEntity<Void> signup(@RequestBody SignupRequest signupRequest) {
+        userService.signUpUser(signupRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -34,7 +44,7 @@ public class UserController {
             description = "Log in user"
     )
     public ResponseEntity<UserResponse> login(@RequestBody LoginRequest loginRequest) {
-        return null; //ResponseEntity.ok(UserResponse.fromEntity());
+        return ResponseEntity.ok(userService.loginUser(loginRequest));
     }
 
     @GetMapping("/users/{username}")
@@ -43,7 +53,6 @@ public class UserController {
             description = "Returns a single user if found"
     )
     public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
-        return null; //ResponseEntity.ok(UserResponse.fromEntity());
+        return ResponseEntity.ok(userService.getUserByUsername(username));
     }
-
 }
