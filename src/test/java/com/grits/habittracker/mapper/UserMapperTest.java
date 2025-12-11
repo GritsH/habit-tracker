@@ -27,16 +27,14 @@ class UserMapperTest {
         User user = userMapper.dtoToEntity(request);
 
         assertThat(user).isNotNull();
-        assertThat(request.getEmail()).isEqualTo(user.getEmail());
-        assertThat(request.getFirstName()).isEqualTo(user.getFirstName());
-        assertThat(request.getLastName()).isEqualTo(user.getLastName());
-        assertThat(request.getUsername()).isEqualTo(user.getUsername());
-        assertThat(user.getPassword()).isNotNull();
+        assertThat(user).usingRecursiveComparison()
+                .ignoringFields("id", "habits")
+                .isEqualTo(request);
     }
 
     @Test
     @DisplayName("should be null if dto is null")
-    void dtoToEntity_DtoNull() {
+    void nullDtoToEntity() {
         assertThat(userMapper.dtoToEntity(null)).isNull();
     }
 
@@ -58,7 +56,7 @@ class UserMapperTest {
 
     @Test
     @DisplayName("should be null if entity is null")
-    void entityToDto_EntityNull() {
+    void nullEntityToDto() {
         assertThat(userMapper.entityToDto(null)).isNull();
     }
 }

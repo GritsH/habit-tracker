@@ -1,6 +1,7 @@
 package com.grits.habittracker.exception.handler;
 
 import com.grits.habittracker.exception.InvalidCredentialsException;
+import com.grits.habittracker.exception.UserAlreadyExistsException;
 import com.grits.habittracker.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,10 +9,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(value = Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public @ResponseBody String handleInternalServerError(Exception ex) {
+        return ex.getMessage();
+    }
 
     @ExceptionHandler(value = InvalidCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -19,9 +24,9 @@ public class GlobalExceptionHandler {
         return ex.getMessage();
     }
 
-    @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
+    @ExceptionHandler(value = UserAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public @ResponseBody String handleUserAlreadyExistsException(SQLIntegrityConstraintViolationException ex) {
+    public @ResponseBody String handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
         return ex.getMessage();
     }
 
@@ -30,5 +35,4 @@ public class GlobalExceptionHandler {
     public @ResponseBody String handleUserNotFoundException(UserNotFoundException ex) {
         return ex.getMessage();
     }
-
 }

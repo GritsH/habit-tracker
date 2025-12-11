@@ -1,13 +1,12 @@
 package com.grits.habittracker.service;
 
+import com.grits.habittracker.dao.UserDao;
 import com.grits.habittracker.entity.User;
 import com.grits.habittracker.exception.InvalidCredentialsException;
-import com.grits.habittracker.exception.UserNotFoundException;
 import com.grits.habittracker.mapper.UserMapper;
 import com.grits.habittracker.model.request.LoginRequest;
 import com.grits.habittracker.model.request.SignupRequest;
 import com.grits.habittracker.model.response.UserResponse;
-import com.grits.habittracker.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,11 +17,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserService {
 
-    private final UserRepository repository;
-
     private final PasswordEncoder passwordEncoder;
 
     private final UserMapper userMapper;
+
+    private final UserDao userDao;
 
     public void signUpUser(SignupRequest signupRequest) {
         log.info("Signing up new user with email: {}", signupRequest.getEmail());
@@ -30,7 +29,7 @@ public class UserService {
         User user = userMapper.dtoToEntity(signupRequest);
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
 
-        repository.save(user);
+        userDao.saveUser(user);
 
         log.info("User signed up successfully");
     }
@@ -38,7 +37,7 @@ public class UserService {
     public UserResponse loginUser(LoginRequest loginRequest) {
         log.info("Login attempt for email: {}", loginRequest.getEmail());
 
-        User user = repository.findByEmail(loginRequest.getEmail()).orElseThrow(UserNotFoundException::new);
+        User user = userDao.getUserByEmail(loginRequest.getEmail());
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException();
@@ -51,7 +50,7 @@ public class UserService {
     public UserResponse getUserByUsername(String username) {
         log.debug("Get user with username: {}", username);
 
-        User user = repository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userDao.getUserByUsername(username);
 
         return userMapper.entityToDto(user);
     }
