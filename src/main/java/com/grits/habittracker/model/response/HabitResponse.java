@@ -1,5 +1,6 @@
 package com.grits.habittracker.model.response;
 
+import com.grits.habittracker.model.type.CategoryType;
 import com.grits.habittracker.model.type.FrequencyType;
 import lombok.Value;
 
@@ -20,6 +21,6 @@ public class HabitResponse {
 
     FrequencyType frequency;
 
-    String habitCategory;
+    CategoryType habitCategory;
 
 }
