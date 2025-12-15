@@ -2,6 +2,7 @@ package com.grits.habittracker.dao.habit;
 
 import com.grits.habittracker.entity.habit.HabitFrequency;
 import com.grits.habittracker.repository.habit.HabitFrequencyRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,11 @@ class HabitFrequencyDaoTest {
     @InjectMocks
     private HabitFrequencyDao habitFrequencyDao;
 
+    @AfterEach
+    public void after() {
+        verifyNoMoreInteractions(repository);
+    }
+
     @Test
     @DisplayName("should get all frequencies")
     void getAllFrequencies() {
@@ -35,7 +41,5 @@ class HabitFrequencyDaoTest {
 
         assertThat(result).isNotEmpty();
         assertThat(result).contains(habitFrequency);
-
-        verifyNoMoreInteractions(repository);
     }
 }

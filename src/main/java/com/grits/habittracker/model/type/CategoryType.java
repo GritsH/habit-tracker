@@ -9,6 +9,7 @@ public enum CategoryType {
     FINANCIAL,
     ARTS_AND_CRAFTS,
     ENVIRONMENTAL,
-    HOME
+    HOME,
+    OTHER
 
 }

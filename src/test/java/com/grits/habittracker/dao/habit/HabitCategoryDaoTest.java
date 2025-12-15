@@ -2,6 +2,7 @@ package com.grits.habittracker.dao.habit;
 
 import com.grits.habittracker.entity.habit.HabitCategory;
 import com.grits.habittracker.repository.habit.HabitCategoryRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,11 @@ class HabitCategoryDaoTest {
     @InjectMocks
     private HabitCategoryDao habitCategoryDao;
 
+    @AfterEach
+    public void after() {
+        verifyNoMoreInteractions(repository);
+    }
+
     @Test
     @DisplayName("should get all categories")
     void getAllCategories() {
@@ -35,7 +41,5 @@ class HabitCategoryDaoTest {
 
         assertThat(result).isNotEmpty();
         assertThat(result).contains(category);
-
-        verifyNoMoreInteractions(repository);
     }
 }
