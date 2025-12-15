@@ -23,7 +23,7 @@ public class UserService {
 
     private final UserDao userDao;
 
-    public void signUpUser(SignupRequest signupRequest) {
+    public UserResponse signUpUser(SignupRequest signupRequest) {
         log.info("Signing up new user with email: {}", signupRequest.getEmail());
 
         User user = userMapper.dtoToEntity(signupRequest);
@@ -32,6 +32,8 @@ public class UserService {
         userDao.saveUser(user);
 
         log.info("User signed up successfully");
+
+        return userMapper.entityToDto(user);
     }
 
     public UserResponse loginUser(LoginRequest loginRequest) {

@@ -7,8 +7,6 @@ public class UserResponse {
 
     String email;
 
-    String password;
-
     String firstName;
 
     String lastName;
