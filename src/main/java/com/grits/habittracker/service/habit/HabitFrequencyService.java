@@ -16,4 +16,8 @@ public class HabitFrequencyService {
     public List<HabitFrequency> getAllFrequencies() {
         return habitFrequencyDao.getAllFrequencies();
     }
+
+    public HabitFrequency getByName(String name) {
+        return habitFrequencyDao.getByName(name);
+    }
 }

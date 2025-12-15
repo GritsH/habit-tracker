@@ -16,4 +16,8 @@ public class HabitCategoryService {
     public List<HabitCategory> getAllCategories() {
         return habitCategoryDao.getAllCategories();
     }
+
+    public HabitCategory getByName(String name){
+        return habitCategoryDao.getByName(name);
+    }
 }

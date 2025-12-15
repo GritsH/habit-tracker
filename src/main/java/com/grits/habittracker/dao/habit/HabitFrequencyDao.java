@@ -1,6 +1,7 @@
 package com.grits.habittracker.dao.habit;
 
 import com.grits.habittracker.entity.habit.HabitFrequency;
+import com.grits.habittracker.exception.HabitFrequencyNotFoundException;
 import com.grits.habittracker.repository.habit.HabitFrequencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,5 +20,11 @@ public class HabitFrequencyDao {
 
     public List<HabitFrequency> getAllFrequencies() {
         return habitFrequencyRepository.findAll();
+    }
+
+    public HabitFrequency getByName(String name) {
+        return habitFrequencyRepository.findByName(name).orElseThrow(
+                () -> new HabitFrequencyNotFoundException(name)
+        );
     }
 }
