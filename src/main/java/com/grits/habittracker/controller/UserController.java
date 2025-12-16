@@ -3,23 +3,20 @@ package com.grits.habittracker.controller;
 import com.grits.habittracker.jwt.JwtTokenProvider;
 import com.grits.habittracker.model.request.LoginRequest;
 import com.grits.habittracker.model.request.SignupRequest;
+import com.grits.habittracker.model.response.AuthResponse;
 import com.grits.habittracker.model.response.UserResponse;
 import com.grits.habittracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.Duration;
 
 @RestController
 @RequestMapping("/v1")
@@ -41,13 +38,14 @@ public class UserController {
             summary = "Register a new user",
             description = "Create a new user"
     )
-    public ResponseEntity<UserResponse> signup(@RequestBody SignupRequest signupRequest, HttpServletResponse servletResponse) {
-        UserResponse response = userService.signUpUser(signupRequest);
+    public ResponseEntity<AuthResponse> signup(@RequestBody SignupRequest signupRequest) {
+        UserResponse userResponse = userService.signUpUser(signupRequest);
 
-        String token = jwtTokenProvider.generateToken(response.getEmail());
-        setAuthCookies(servletResponse, token);
+        String token = jwtTokenProvider.generateToken(userResponse.getUsername());
 
-        return ResponseEntity.ok(response);
+        AuthResponse authResponse = new AuthResponse(userResponse, token);
+
+        return ResponseEntity.ok(authResponse);
     }
 
     @PostMapping("/login")
@@ -55,13 +53,14 @@ public class UserController {
             summary = "Authenticate user",
             description = "Log in user"
     )
-    public ResponseEntity<UserResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse servletResponse) {
-        UserResponse response = userService.loginUser(loginRequest);
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
+        UserResponse userResponse = userService.loginUser(loginRequest);
 
-        String token = jwtTokenProvider.generateToken(response.getEmail());
-        setAuthCookies(servletResponse, token);
+        String token = jwtTokenProvider.generateToken(userResponse.getUsername());
 
-        return ResponseEntity.ok(response);
+        AuthResponse authResponse = new AuthResponse(userResponse, token);
+
+        return ResponseEntity.ok(authResponse);
     }
 
     @PostMapping("/logout")
@@ -69,9 +68,7 @@ public class UserController {
             summary = "Log out",
             description = "Terminate user's session"
     )
-    public ResponseEntity<Void> logout(HttpServletResponse servletResponse) {
-        clearAuthCookie(servletResponse);
-
+    public ResponseEntity<Void> logout() {
         return ResponseEntity.ok().build();
     }
 
@@ -81,31 +78,8 @@ public class UserController {
             summary = "Get a user by username",
             description = "Returns a single user if found"
     )
+    @PreAuthorize("#username == authentication.principal")
     public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
         return ResponseEntity.ok(userService.getUserByUsername(username));
-    }
-
-    private static void setAuthCookies(HttpServletResponse servletResponse, String token) {
-        ResponseCookie cookie = ResponseCookie.from("access_token", token)
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(Duration.ofDays(7))
-                .sameSite("Strict")
-                .build();
-
-        servletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-    }
-
-    private void clearAuthCookie(HttpServletResponse servletResponse) {
-        ResponseCookie cookie = ResponseCookie.from("auth_token", "")
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(0)
-                .sameSite("Strict")
-                .build();
-
-        servletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }
