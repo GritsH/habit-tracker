@@ -21,6 +21,6 @@ public class HabitResponse {
 
     FrequencyType frequency;
 
-    CategoryType habitCategory;
+    CategoryType category;
 
 }
