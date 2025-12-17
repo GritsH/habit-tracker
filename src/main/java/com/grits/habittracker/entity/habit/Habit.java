@@ -52,6 +52,6 @@ public class Habit {
     private HabitFrequency frequency;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "habit_category_id", nullable = false)
     private HabitCategory habitCategory;
 }

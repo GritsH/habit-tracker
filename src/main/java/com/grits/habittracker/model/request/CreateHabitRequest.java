@@ -7,8 +7,6 @@ import java.time.LocalDate;
 @Value
 public class CreateHabitRequest {
 
-    String userId;
-
     String name;
 
     String description;

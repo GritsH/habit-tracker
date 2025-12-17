@@ -1,5 +1,8 @@
 package com.grits.habittracker.exception.handler;
 
+import com.grits.habittracker.exception.HabitCategoryNotFoundException;
+import com.grits.habittracker.exception.HabitFrequencyNotFoundException;
+import com.grits.habittracker.exception.HabitNotFoundException;
 import com.grits.habittracker.exception.InvalidCredentialsException;
 import com.grits.habittracker.exception.UserAlreadyExistsException;
 import com.grits.habittracker.exception.UserNotFoundException;
@@ -33,6 +36,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public @ResponseBody String handleUserNotFoundException(UserNotFoundException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(value = HabitCategoryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public @ResponseBody String handleHabitCategoryNotFoundException(HabitCategoryNotFoundException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(value = HabitFrequencyNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public @ResponseBody String handleHabitFrequencyNotFoundException(HabitFrequencyNotFoundException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(value = HabitNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public @ResponseBody String handleHabitNotFoundException(HabitNotFoundException ex) {
         return ex.getMessage();
     }
 }

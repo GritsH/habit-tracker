@@ -17,8 +17,6 @@ public class HabitResponse {
 
     String description;
 
-    UserResponse user;
-
     FrequencyType frequency;
 
     CategoryType category;

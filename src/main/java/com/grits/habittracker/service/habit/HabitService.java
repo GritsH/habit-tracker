@@ -4,12 +4,14 @@ import com.grits.habittracker.dao.habit.HabitDao;
 import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.mapper.HabitMapper;
 import com.grits.habittracker.model.request.CreateHabitRequest;
+import com.grits.habittracker.model.request.UpdateHabitRequest;
+import com.grits.habittracker.model.response.HabitResponse;
 import com.grits.habittracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,25 +20,40 @@ public class HabitService {
 
     private final HabitDao habitDao;
 
-    private final HabitFrequencyService frequencyService;
-
-    private final HabitCategoryService categoryService;
-
     private final UserService userService;
 
     private final HabitMapper habitMapper;
 
-    public void createNewHabit(CreateHabitRequest createHabitRequest) {
-        log.info("Creating a new habit: {}", createHabitRequest.getName());
+    public void createNewHabit(String username, CreateHabitRequest createHabitRequest) {
+        log.info("Saving new habit for user {}", username);
 
-        Habit newHabit = habitMapper.createDtoToEntity(createHabitRequest);
-        //todo set user somehow
-        newHabit.setHabitCategory(categoryService.getByName(createHabitRequest.getHabitCategory()));
-        newHabit.setFrequency(frequencyService.getByName(createHabitRequest.getFrequency()));
-        newHabit.setCreatedAt(LocalDate.now());
+        habitDao.saveHabit(createHabitRequest, username);
 
-        habitDao.saveHabit(newHabit);
+        log.info("New habit saved successfully");
+    }
 
-        log.info("New habit {} created successfully", newHabit.getName());
+    public List<HabitResponse> getAllHabits(String username) {
+        log.info("Retrieving habits for user {}", username);
+
+        List<Habit> userHabits = habitDao.getUserHabits(username);
+
+        return habitMapper.entityListToDtoList(userHabits);
+    }
+
+    public void deleteHabit(String habitId) {
+        log.info("Delete attempt for a habit with id: {}", habitId);
+
+        habitDao.deleteHabit(habitId);
+
+        log.info("Habit with id {} deleted successfully", habitId);
+    }
+
+    public HabitResponse updateHabit(String habitId, UpdateHabitRequest updateHabitRequest) {
+        log.info("Updating habit with id: {}", habitId);
+
+        Habit habit = habitDao.updateHabit(updateHabitRequest, habitId);
+
+        log.info("Habit {} updated successfully", habitId);
+        return habitMapper.entityToDto(habit);
     }
 }
