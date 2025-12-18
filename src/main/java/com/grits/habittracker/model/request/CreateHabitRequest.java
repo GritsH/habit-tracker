@@ -1,5 +1,7 @@
 package com.grits.habittracker.model.request;
 
+import com.grits.habittracker.model.type.CategoryType;
+import com.grits.habittracker.model.type.FrequencyType;
 import lombok.Value;
 
 import java.time.LocalDate;
@@ -13,7 +15,7 @@ public class CreateHabitRequest {
 
     LocalDate startDate;
 
-    String frequency;
+    FrequencyType frequency;
 
-    String habitCategory;
+    CategoryType category;
 }

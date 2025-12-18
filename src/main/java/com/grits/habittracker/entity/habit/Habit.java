@@ -47,11 +47,9 @@ public class Habit {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "frequency_id", nullable = false)
-    private HabitFrequency frequency;
+    @Column(name = "frequency")
+    private String frequency;
 
-    @ManyToOne
-    @JoinColumn(name = "habit_category_id", nullable = false)
-    private HabitCategory habitCategory;
+    @Column(name = "category")
+    private String category;
 }

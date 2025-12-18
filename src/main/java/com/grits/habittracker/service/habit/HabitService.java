@@ -6,7 +6,6 @@ import com.grits.habittracker.mapper.HabitMapper;
 import com.grits.habittracker.model.request.CreateHabitRequest;
 import com.grits.habittracker.model.request.UpdateHabitRequest;
 import com.grits.habittracker.model.response.HabitResponse;
-import com.grits.habittracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,14 +19,14 @@ public class HabitService {
 
     private final HabitDao habitDao;
 
-    private final UserService userService;
-
     private final HabitMapper habitMapper;
 
     public void createNewHabit(String username, CreateHabitRequest createHabitRequest) {
         log.info("Saving new habit for user {}", username);
 
-        habitDao.saveHabit(createHabitRequest, username);
+        Habit habit = habitMapper.createDtoToEntity(createHabitRequest);
+
+        habitDao.saveHabit(habit, username);
 
         log.info("New habit saved successfully");
     }
