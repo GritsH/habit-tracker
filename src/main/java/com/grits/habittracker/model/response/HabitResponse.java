@@ -15,6 +15,8 @@ public class HabitResponse {
 
     LocalDate createdAt;
 
+    LocalDate startDate;
+
     String description;
 
     FrequencyType frequency;
