@@ -3,6 +3,7 @@ package com.grits.habittracker.mapper;
 import com.grits.habittracker.entity.User;
 import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.model.request.CreateHabitRequest;
+import com.grits.habittracker.model.request.UpdateHabitRequest;
 import com.grits.habittracker.model.response.HabitResponse;
 import com.grits.habittracker.model.type.CategoryType;
 import com.grits.habittracker.model.type.FrequencyType;
@@ -27,8 +28,8 @@ class HabitMapperTest {
         habit.setId("id123");
         habit.setName("Exercise");
         habit.setDescription("Daily exercise");
-        habit.setCategory("OTHER");
-        habit.setFrequency("DAILY");
+        habit.setCategory(CategoryType.OTHER);
+        habit.setFrequency(FrequencyType.DAILY);
         habit.setCreatedAt(LocalDate.now());
         habit.setStartDate(LocalDate.of(2026, 2, 1));
         habit.setUser(new User());
@@ -45,16 +46,16 @@ class HabitMapperTest {
                 CategoryType.ARTS_AND_CRAFTS
         );
 
-        Habit habit = habitMapper.createDtoToEntity(createHabitRequest);
+        Habit habit = habitMapper.toHabit(createHabitRequest);
 
         assertThat(habit).isNotNull();
         assertThat(habit)
                 .usingRecursiveComparison()
-                .ignoringFields("id", "user", "createdAt", "frequency", "category")
+                .ignoringFields("id", "user", "createdAt", "version")
                 .isEqualTo(createHabitRequest);
 
-        assertThat(habit.getCategory()).isEqualTo(createHabitRequest.getCategory().toString());
-        assertThat(habit.getFrequency()).isEqualTo(createHabitRequest.getFrequency().toString());
+        assertThat(habit.getCategory()).isEqualTo(createHabitRequest.getCategory());
+        assertThat(habit.getFrequency()).isEqualTo(createHabitRequest.getFrequency());
         assertThat(habit.getCreatedAt()).isEqualTo(LocalDate.now());
 
         assertThat(habit.getId()).isNull();
@@ -65,14 +66,14 @@ class HabitMapperTest {
     @Test
     @DisplayName("should return null when CreateHabitRequest is null")
     void nullCreateDtoToEntity() {
-        assertThat(habitMapper.createDtoToEntity(null)).isNull();
+        assertThat(habitMapper.toHabit(null)).isNull();
     }
 
     @Test
     @DisplayName("should map entity to a response dto")
     void entityToDto() {
 
-        HabitResponse response = habitMapper.entityToDto(habit);
+        HabitResponse response = habitMapper.toDto(habit);
 
         assertThat(response).isNotNull();
         assertThat(response)
@@ -87,7 +88,7 @@ class HabitMapperTest {
     @Test
     @DisplayName("should return null when entity is null")
     void nullEntityToDto() {
-        assertThat(habitMapper.entityToDto(null)).isNull();
+        assertThat(habitMapper.toDto(null)).isNull();
     }
 
     @Test
@@ -95,7 +96,7 @@ class HabitMapperTest {
     void entityListToDtoList() {
         List<Habit> habits = List.of(habit);
 
-        List<HabitResponse> responses = habitMapper.entityListToDtoList(habits);
+        List<HabitResponse> responses = habitMapper.toDtoList(habits);
 
         assertThat(responses).isNotNull().hasSameSizeAs(habits);
         assertThat(responses.get(0))
@@ -104,5 +105,69 @@ class HabitMapperTest {
                 .isEqualTo(habit);
         assertThat(responses.get(0).getCategory()).isEqualTo(CategoryType.OTHER);
         assertThat(responses.get(0).getFrequency()).isEqualTo(FrequencyType.DAILY);
+    }
+
+    @Test
+    @DisplayName("should update all non-null fields from request")
+    void updateHabit() {
+        UpdateHabitRequest request = new UpdateHabitRequest(
+                "Updated Exercise",
+                "Updated description",
+                LocalDate.of(2026, 1, 15),
+                FrequencyType.WEEKLY,
+                CategoryType.PHYSICAL_HEALTH
+        );
+
+
+        Habit habit = new Habit();
+        habit.setId("id123");
+        habit.setVersion(0L);
+        habit.setName("Old Exercise");
+        habit.setDescription("Old description");
+        habit.setCategory(CategoryType.MENTAL_HEALTH);
+        habit.setFrequency(FrequencyType.DAILY);
+        habit.setStartDate(LocalDate.of(2025, 12, 1));
+        habit.setCreatedAt(LocalDate.now());
+        habit.setUser(new User());
+
+        habitMapper.updateHabit(request, habit);
+
+        assertThat(habit.getId()).isEqualTo("id123");
+        assertThat(habit.getUser()).isNotNull();
+        assertThat(habit.getCreatedAt()).isEqualTo(LocalDate.now());
+
+        assertThat(habit)
+                .usingRecursiveComparison()
+                .ignoringFields("id", "user", "createdAt", "version")
+                .isEqualTo(request);
+    }
+
+    @Test
+    @DisplayName("should ignore null fields from request")
+    void updateHabitWithNullFields() {
+        UpdateHabitRequest request = new UpdateHabitRequest(
+                "Updated Exercise",
+                null,
+                null,
+                null,
+                null
+        );
+
+
+        Habit habit = new Habit();
+        habit.setId("id123");
+        habit.setVersion(0L);
+        habit.setName("Old Exercise");
+        habit.setDescription("Old description");
+        habit.setCategory(CategoryType.MENTAL_HEALTH);
+        habit.setFrequency(FrequencyType.DAILY);
+        habit.setStartDate(LocalDate.of(2025, 12, 1));
+        habit.setCreatedAt(LocalDate.now());
+        habit.setUser(new User());
+
+        habitMapper.updateHabit(request, habit);
+
+        assertThat(habit.getName()).isEqualTo(request.getName());
+        assertThat(habit).hasNoNullFieldsOrProperties();
     }
 }

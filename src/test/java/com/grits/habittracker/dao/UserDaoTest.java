@@ -99,11 +99,11 @@ class UserDaoTest {
     }
 
     @Test
-    @DisplayName("should find user by username")
-    void getUserByUsername() {
-        when(repository.findByUsername("userName!@!!")).thenReturn(Optional.of(user));
+    @DisplayName("should find user by id")
+    void getUserById() {
+        when(repository.findById("id")).thenReturn(Optional.of(user));
 
-        User result = userDao.getUserByUsername("userName!@!!");
+        User result = userDao.getUserById("id");
 
         assertThat(result).isNotNull();
         assertThat(result).usingRecursiveComparison()
@@ -112,12 +112,12 @@ class UserDaoTest {
     }
 
     @Test
-    @DisplayName("should not find user by invalid username and throw exception")
-    void getUserByUsernameWithException() {
-        when(repository.findByUsername("bad_username")).thenReturn(Optional.empty());
+    @DisplayName("should not find user by invalid id and throw exception")
+    void getUserByIdWithException() {
+        when(repository.findById("bad_id")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userDao.getUserByUsername("bad_username"))
+        assertThatThrownBy(() -> userDao.getUserById("bad_id"))
                 .isInstanceOf(UserNotFoundException.class)
-                .hasMessage("User bad_username not found");
+                .hasMessage("User bad_id not found");
     }
 }

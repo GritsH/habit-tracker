@@ -42,7 +42,6 @@ class HabitDaoTest {
 
     private User user;
     private Habit habit;
-    private UpdateHabitRequest updateHabitRequest;
 
     @BeforeEach
     void setUp() {
@@ -54,18 +53,10 @@ class HabitDaoTest {
         habit.setId("id123");
         habit.setName("Exercise");
         habit.setDescription("Daily exercise");
-        habit.setCategory("OTHER");
-        habit.setFrequency("DAILY");
+        habit.setCategory(CategoryType.OTHER);
+        habit.setFrequency(FrequencyType.DAILY);
         habit.setStartDate(LocalDate.now());
         habit.setUser(user);
-
-        updateHabitRequest = new UpdateHabitRequest(
-                "Updated",
-                "Updated description",
-                LocalDate.of(2026, 2, 1),
-                FrequencyType.MONTHLY,
-                CategoryType.ENVIRONMENTAL
-        );
     }
 
     @AfterEach
@@ -76,9 +67,9 @@ class HabitDaoTest {
     @Test
     @DisplayName("should save a new habit")
     void saveHabit() {
-        when(userDao.getUserByUsername("username")).thenReturn(user);
+        when(userDao.getUserReferenceById("id")).thenReturn(user);
 
-        habitDao.saveHabit(habit, "username");
+        habitDao.saveHabit(habit, "id");
 
         verify(habitRepository).save(habit);
     }
@@ -96,30 +87,9 @@ class HabitDaoTest {
     @Test
     @DisplayName("should update existing habit")
     void updateHabit() {
-        when(habitRepository.findById("id123")).thenReturn(Optional.of(habit));
-        when(habitRepository.save(habit)).thenReturn(habit);
-
-        Habit updatedHabit = habitDao.updateHabit(updateHabitRequest, "id123");
+        habitDao.saveUpdatedHabit(habit);
 
         verify(habitRepository).save(habit);
-
-        assertThat(updatedHabit)
-                .usingRecursiveComparison()
-                .ignoringFields("id", "user", "createdAt", "frequency", "category")
-                .isEqualTo(updateHabitRequest);
-        assertThat(updatedHabit.getCategory()).isEqualTo(updateHabitRequest.getCategory().toString());
-        assertThat(updatedHabit.getFrequency()).isEqualTo(updateHabitRequest.getFrequency().toString());
-
-    }
-
-    @Test
-    @DisplayName("should throw a HabitNotFound exception")
-    void updateWithException() {
-        when(habitRepository.findById("id")).thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> habitDao.updateHabit(updateHabitRequest, "id"))
-                .isInstanceOf(HabitNotFoundException.class)
-                .hasMessage("Habit with id id not found");
     }
 
     @Test
@@ -127,10 +97,9 @@ class HabitDaoTest {
     void getUserHabits() {
         List<Habit> expectedHabits = List.of(habit);
 
-        when(userDao.getUserByUsername("username")).thenReturn(user);
-        when(habitRepository.findAllByUserId(user.getId())).thenReturn(expectedHabits);
+        when(habitRepository.findAllByUserId("userId")).thenReturn(expectedHabits);
 
-        List<Habit> actualHabits = habitDao.getUserHabits("username");
+        List<Habit> actualHabits = habitDao.getUserHabits("userId");
 
         assertThat(actualHabits).isNotEmpty();
         assertThat(actualHabits).isEqualTo(expectedHabits);

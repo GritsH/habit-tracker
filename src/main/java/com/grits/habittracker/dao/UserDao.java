@@ -4,19 +4,15 @@ import com.grits.habittracker.entity.User;
 import com.grits.habittracker.exception.UserAlreadyExistsException;
 import com.grits.habittracker.exception.UserNotFoundException;
 import com.grits.habittracker.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class UserDao {
 
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserDao(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public void saveUser(User user) {
         try {
@@ -32,9 +28,13 @@ public class UserDao {
         );
     }
 
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(
-                () -> new UserNotFoundException(username)
+    public User getUserReferenceById(String userId) {
+        return userRepository.getReferenceById(userId);
+    }
+
+    public User getUserById(String id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException(id)
         );
     }
 }

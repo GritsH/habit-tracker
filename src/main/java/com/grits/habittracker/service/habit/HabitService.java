@@ -8,35 +8,42 @@ import com.grits.habittracker.model.request.UpdateHabitRequest;
 import com.grits.habittracker.model.response.HabitResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class HabitService {
 
     private final HabitDao habitDao;
 
     private final HabitMapper habitMapper;
 
-    public void createNewHabit(String username, CreateHabitRequest createHabitRequest) {
-        log.info("Saving new habit for user {}", username);
+    public HabitResponse createNewHabit(String userId, CreateHabitRequest createHabitRequest) {
+        log.info("Saving new habit for user {}", userId);
 
-        Habit habit = habitMapper.createDtoToEntity(createHabitRequest);
+        Habit habit = habitMapper.toHabit(createHabitRequest);
 
-        habitDao.saveHabit(habit, username);
+        HabitResponse response = habitMapper.toDto(habitDao.saveHabit(habit, userId));
 
         log.info("New habit saved successfully");
+
+        return response;
     }
 
-    public List<HabitResponse> getAllHabits(String username) {
-        log.info("Retrieving habits for user {}", username);
+    public List<HabitResponse> getAllHabits(String userId) {
+        log.info("Retrieving habits for user {}", userId);
 
-        List<Habit> userHabits = habitDao.getUserHabits(username);
+        List<Habit> userHabits = habitDao.getUserHabits(userId);
 
-        return habitMapper.entityListToDtoList(userHabits);
+        log.info("Habits for user {} retrieved successfully", userId);
+
+        return habitMapper.toDtoList(userHabits);
     }
 
     public void deleteHabit(String habitId) {
@@ -50,9 +57,16 @@ public class HabitService {
     public HabitResponse updateHabit(String habitId, UpdateHabitRequest updateHabitRequest) {
         log.info("Updating habit with id: {}", habitId);
 
-        Habit habit = habitDao.updateHabit(updateHabitRequest, habitId);
+        Habit habit = habitDao.getHabitById(habitId);
 
-        log.info("Habit {} updated successfully", habitId);
-        return habitMapper.entityToDto(habit);
+        habitMapper.updateHabit(updateHabitRequest, habit);
+
+        try{
+            habitDao.saveUpdatedHabit(habit);
+            log.info("Habit {} updated successfully", habitId);
+            return habitMapper.toDto(habit);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            throw new RuntimeException("Habit was not updated. Try again later");
+        }
     }
 }

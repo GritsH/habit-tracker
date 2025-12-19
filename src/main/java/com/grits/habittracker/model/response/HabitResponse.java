@@ -11,6 +11,8 @@ public class HabitResponse {
 
     String id;
 
+    Long version;
+
     String name;
 
     LocalDate createdAt;

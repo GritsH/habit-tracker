@@ -3,7 +3,6 @@ package com.grits.habittracker.service.habit;
 import com.grits.habittracker.dao.habit.HabitDao;
 import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.exception.HabitNotFoundException;
-import com.grits.habittracker.exception.UserNotFoundException;
 import com.grits.habittracker.mapper.HabitMapper;
 import com.grits.habittracker.model.request.CreateHabitRequest;
 import com.grits.habittracker.model.request.UpdateHabitRequest;
@@ -60,11 +59,15 @@ class HabitServiceTest {
     @Test
     @DisplayName("should create a new habit")
     void createNewHabit() {
-        when(habitMapper.createDtoToEntity(createHabitRequest)).thenReturn(habit);
+        when(habitMapper.toHabit(createHabitRequest)).thenReturn(habit);
+        when(habitDao.saveHabit(habit, "id")).thenReturn(habit);
+        when(habitMapper.toDto(habit)).thenReturn(habitResponse);
 
-        habitService.createNewHabit("username", createHabitRequest);
+        HabitResponse result = habitService.createNewHabit("id", createHabitRequest);
 
-        verify(habitDao).saveHabit(habit, "username");
+        verify(habitDao).saveHabit(habit, "id");
+
+        assertThat(result).usingRecursiveComparison().isEqualTo(habitResponse);
     }
 
     @Test
@@ -74,7 +77,7 @@ class HabitServiceTest {
         List<HabitResponse> habitResponses = List.of(habitResponse);
 
         when(habitDao.getUserHabits("username")).thenReturn(habits);
-        when(habitMapper.entityListToDtoList(habits)).thenReturn(habitResponses);
+        when(habitMapper.toDtoList(habits)).thenReturn(habitResponses);
 
         List<HabitResponse> userHabits = habitService.getAllHabits("username");
 
@@ -98,11 +101,12 @@ class HabitServiceTest {
         Habit updatedHabit = new Habit();
         updatedHabit.setId("id123");
         updatedHabit.setName("Updated Exercise");
-        updatedHabit.setCategory("MENTAL_HEALTH");
-        updatedHabit.setFrequency("WEEKLY");
+        updatedHabit.setCategory(CategoryType.MENTAL_HEALTH);
+        updatedHabit.setFrequency(FrequencyType.WEEKLY);
 
         HabitResponse updatedResponse = new HabitResponse(
                 "id123",
+                0L,
                 "Updated Exercise",
                 LocalDate.now(),
                 LocalDate.of(2026, 10, 1),
@@ -111,10 +115,15 @@ class HabitServiceTest {
                 CategoryType.MENTAL_HEALTH
         );
 
-        when(habitDao.updateHabit(updateHabitRequest, "id123")).thenReturn(updatedHabit);
-        when(habitMapper.entityToDto(updatedHabit)).thenReturn(updatedResponse);
+        when(habitDao.getHabitById("id123")).thenReturn(habit);
+        doNothing().when(habitMapper).updateHabit(updateHabitRequest, habit);
+        when(habitDao.saveUpdatedHabit(habit)).thenReturn(updatedHabit);
+        when(habitMapper.toDto(habit)).thenReturn(updatedResponse);
 
         HabitResponse result = habitService.updateHabit("id123", updateHabitRequest);
+
+        verify(habitMapper).updateHabit(updateHabitRequest, habit);
+        verify(habitDao).saveUpdatedHabit(habit);
 
         assertThat(result).isNotNull();
         assertThat(result).usingRecursiveComparison().isEqualTo(updatedResponse);
@@ -123,7 +132,7 @@ class HabitServiceTest {
     @Test
     @DisplayName("should throw exception when updating the habit")
     void updateHabitWithException() {
-        when(habitDao.updateHabit(updateHabitRequest, "id123")).thenThrow(HabitNotFoundException.class);
+        when(habitDao.getHabitById("id123")).thenThrow(HabitNotFoundException.class);
 
         assertThatThrownBy(() -> habitService.updateHabit("id123", updateHabitRequest)).isInstanceOf(HabitNotFoundException.class);
     }
