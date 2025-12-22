@@ -1,12 +1,17 @@
 package com.grits.habittracker.entity.habit;
 
 import com.grits.habittracker.entity.User;
+import com.grits.habittracker.model.type.CategoryType;
+import com.grits.habittracker.model.type.FrequencyType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +36,10 @@ public class Habit {
     )
     private String id;
 
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
+
     @Column(name = "habit_name")
     private String name;
 
@@ -47,11 +56,9 @@ public class Habit {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "frequency_id", nullable = false)
-    private HabitFrequency frequency;
+    @Enumerated(EnumType.STRING)
+    private FrequencyType frequency;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private HabitCategory habitCategory;
+    @Enumerated(EnumType.STRING)
+    private CategoryType category;
 }

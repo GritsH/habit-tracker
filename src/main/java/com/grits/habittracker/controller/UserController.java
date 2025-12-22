@@ -47,12 +47,12 @@ public class UserController {
         return ResponseEntity.ok(userService.loginUser(loginRequest));
     }
 
-    @GetMapping("/users/{username}")
+    @GetMapping("/users/{id}")
     @Operation(
-            summary = "Get a user by username",
+            summary = "Get a user by id",
             description = "Returns a single user if found"
     )
-    public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
-        return ResponseEntity.ok(userService.getUserByUsername(username));
+    public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 }

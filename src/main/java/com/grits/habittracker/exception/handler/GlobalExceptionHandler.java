@@ -1,5 +1,6 @@
 package com.grits.habittracker.exception.handler;
 
+import com.grits.habittracker.exception.HabitNotFoundException;
 import com.grits.habittracker.exception.InvalidCredentialsException;
 import com.grits.habittracker.exception.UserAlreadyExistsException;
 import com.grits.habittracker.exception.UserNotFoundException;
@@ -33,6 +34,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public @ResponseBody String handleUserNotFoundException(UserNotFoundException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(value = HabitNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public @ResponseBody String handleHabitNotFoundException(HabitNotFoundException ex) {
         return ex.getMessage();
     }
 }

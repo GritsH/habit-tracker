@@ -11,13 +11,15 @@ public class HabitResponse {
 
     String id;
 
+    Long version;
+
     String name;
 
     LocalDate createdAt;
 
-    String description;
+    LocalDate startDate;
 
-    UserResponse user;
+    String description;
 
     FrequencyType frequency;
 
