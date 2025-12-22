@@ -76,8 +76,6 @@ class HabitDaoTest {
     @Test
     @DisplayName("should delete a habit")
     void deleteHabit() {
-        doNothing().when(habitRepository).deleteById("id123");
-
         habitDao.deleteHabit("id123");
 
         verify(habitRepository).deleteById("id123");

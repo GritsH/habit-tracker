@@ -95,8 +95,6 @@ class HabitServiceTest {
     @Test
     @DisplayName("should delete a habit")
     void deleteHabit() {
-        doNothing().when(habitDao).deleteHabit("id123");
-
         habitService.deleteHabit("id123");
 
         verify(habitDao).deleteHabit("id123");

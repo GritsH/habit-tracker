@@ -54,8 +54,6 @@ class HabitMapperTest {
                 .ignoringFields("id", "user", "createdAt", "version")
                 .isEqualTo(createHabitRequest);
 
-        assertThat(habit.getCategory()).isEqualTo(createHabitRequest.getCategory());
-        assertThat(habit.getFrequency()).isEqualTo(createHabitRequest.getFrequency());
         assertThat(habit.getCreatedAt()).isEqualTo(LocalDate.now());
 
         assertThat(habit.getId()).isNull();
