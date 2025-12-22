@@ -11,5 +11,5 @@ public class HabitCompletionResponse {
 
     LocalDate loggedAt;
 
-    String completionKey;
+    String completionLog;
 }

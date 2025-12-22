@@ -23,24 +23,19 @@ public class HabitCompletionService {
 
     public HabitCompletionResponse logCompletion(String habitId) {
         log.info("Logging completion for habit: {}", habitId);
-
         HabitCompletion habitCompletion = completionMapper.toEntity(habitId);
-
         HabitCompletionResponse response = completionMapper.toResponse(
                 completionDao.saveCompletion(habitId, habitCompletion)
         );
 
         //todo update streak
-
         log.info("Habit {} logged successfully", habitId);
         return response;
     }
 
     public List<HabitCompletionResponse> getHabitLogHistory(String habitId) {
         log.info("Retrieving completions log for habit: {}", habitId);
-
         List<HabitCompletion> history = completionDao.getHabitLogHistory(habitId);
-
         log.info("Completion history for habit {} retrieved successfully", habitId);
         return completionMapper.toDtoList(history);
     }

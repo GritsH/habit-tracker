@@ -33,8 +33,8 @@ public class HabitCompletion {
     @Column(name = "logged_at")
     private LocalDate loggedAt;
 
-    @Column(name = "completion_key")
-    private String completionKey;
+    @Column(name = "completion_log")
+    private String completionLog;
 
     @ManyToOne
     @JoinColumn(name = "habit_id", nullable = false)
