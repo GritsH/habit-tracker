@@ -30,14 +30,11 @@ public class HabitCompletion {
     )
     private String id;
 
-    @Column(name = "created_at")
-    private LocalDate createdAt;
+    @Column(name = "logged_at")
+    private LocalDate loggedAt;
 
-    @Column(name = "completed_at")
-    private LocalDate completedAt;
-
-    @Column(name = "is_skipped")
-    private boolean isSkipped;
+    @Column(name = "completion_key")
+    private String completionKey;
 
     @ManyToOne
     @JoinColumn(name = "habit_id", nullable = false)

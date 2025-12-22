@@ -7,9 +7,9 @@ import java.time.LocalDate;
 @Value
 public class HabitCompletionResponse {
 
-    HabitResponse habit;
+    String id;
 
-    LocalDate completedAt;
+    LocalDate loggedAt;
 
-    boolean isSkipped;
+    String completionKey;
 }
