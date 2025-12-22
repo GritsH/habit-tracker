@@ -1,12 +1,10 @@
 package com.grits.habittracker.dao.habit;
 
-import com.grits.habittracker.dao.UserDao;
 import com.grits.habittracker.entity.User;
 import com.grits.habittracker.entity.habit.Habit;
-import com.grits.habittracker.exception.HabitNotFoundException;
-import com.grits.habittracker.model.request.UpdateHabitRequest;
 import com.grits.habittracker.model.type.CategoryType;
 import com.grits.habittracker.model.type.FrequencyType;
+import com.grits.habittracker.repository.UserRepository;
 import com.grits.habittracker.repository.habit.HabitRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,10 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -35,7 +31,7 @@ class HabitDaoTest {
     private HabitRepository habitRepository;
 
     @Mock
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     @InjectMocks
     private HabitDao habitDao;
@@ -61,13 +57,16 @@ class HabitDaoTest {
 
     @AfterEach
     public void after() {
-        verifyNoMoreInteractions(habitRepository, userDao);
+        verifyNoMoreInteractions(
+                habitRepository,
+                userRepository
+        );
     }
 
     @Test
     @DisplayName("should save a new habit")
     void saveHabit() {
-        when(userDao.getUserReferenceById("id")).thenReturn(user);
+        when(userRepository.getReferenceById("id")).thenReturn(user);
 
         habitDao.saveHabit(habit, "id");
 
@@ -87,7 +86,7 @@ class HabitDaoTest {
     @Test
     @DisplayName("should update existing habit")
     void updateHabit() {
-        habitDao.saveUpdatedHabit(habit);
+        habitDao.updateHabit(habit);
 
         verify(habitRepository).save(habit);
     }

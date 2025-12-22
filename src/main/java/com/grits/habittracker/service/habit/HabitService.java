@@ -8,7 +8,6 @@ import com.grits.habittracker.model.request.UpdateHabitRequest;
 import com.grits.habittracker.model.response.HabitResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,12 +60,8 @@ public class HabitService {
 
         habitMapper.updateHabit(updateHabitRequest, habit);
 
-        try{
-            habitDao.saveUpdatedHabit(habit);
-            log.info("Habit {} updated successfully", habitId);
-            return habitMapper.toDto(habit);
-        } catch (ObjectOptimisticLockingFailureException e) {
-            throw new RuntimeException("Habit was not updated. Try again later");
-        }
+        habitDao.updateHabit(habit);
+        log.info("Habit {} updated successfully", habitId);
+        return habitMapper.toDto(habit);
     }
 }

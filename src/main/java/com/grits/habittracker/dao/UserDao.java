@@ -28,10 +28,6 @@ public class UserDao {
         );
     }
 
-    public User getUserReferenceById(String userId) {
-        return userRepository.getReferenceById(userId);
-    }
-
     public User getUserById(String id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException(id)

@@ -53,7 +53,14 @@ class HabitServiceTest {
 
     @AfterEach
     public void after() {
-        verifyNoMoreInteractions(habitDao, habitMapper);
+        verifyNoMoreInteractions(
+                habitDao,
+                habitMapper,
+                updateHabitRequest,
+                createHabitRequest,
+                habitResponse,
+                habit
+        );
     }
 
     @Test
@@ -67,7 +74,7 @@ class HabitServiceTest {
 
         verify(habitDao).saveHabit(habit, "id");
 
-        assertThat(result).usingRecursiveComparison().isEqualTo(habitResponse);
+        assertThat(result).isSameAs(habitResponse);
     }
 
     @Test
@@ -116,14 +123,12 @@ class HabitServiceTest {
         );
 
         when(habitDao.getHabitById("id123")).thenReturn(habit);
-        doNothing().when(habitMapper).updateHabit(updateHabitRequest, habit);
-        when(habitDao.saveUpdatedHabit(habit)).thenReturn(updatedHabit);
+        when(habitDao.updateHabit(habit)).thenReturn(updatedHabit);
         when(habitMapper.toDto(habit)).thenReturn(updatedResponse);
 
         HabitResponse result = habitService.updateHabit("id123", updateHabitRequest);
 
         verify(habitMapper).updateHabit(updateHabitRequest, habit);
-        verify(habitDao).saveUpdatedHabit(habit);
 
         assertThat(result).isNotNull();
         assertThat(result).usingRecursiveComparison().isEqualTo(updatedResponse);
