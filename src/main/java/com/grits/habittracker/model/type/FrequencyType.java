@@ -19,6 +19,6 @@ public enum FrequencyType {
     }
 
     public boolean wasMissed(LocalDate lastUpdated, LocalDate yesterday) {
-        return lastUpdated.equals(missedCheckDate.apply(yesterday));
+        return !lastUpdated.equals(missedCheckDate.apply(yesterday));
     }
 }
