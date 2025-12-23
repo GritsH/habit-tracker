@@ -10,9 +10,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface HabitCompletionMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "habit", ignore = true)
-    @Mapping(target = "completionLog", ignore = true)
     @Mapping(target = "loggedAt", expression = "java(LocalDate.now())")
     HabitCompletion toEntity(String habitId);
 

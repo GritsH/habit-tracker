@@ -7,25 +7,23 @@ import com.grits.habittracker.model.response.HabitCompletionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class HabitCompletionService {
 
     private final HabitCompletionDao completionDao;
 
     private final HabitCompletionMapper completionMapper;
 
-    public HabitCompletionResponse logCompletion(String habitId) {
+    public HabitCompletionResponse logCompletion(String habitId, String userId) {
         log.info("Logging completion for habit: {}", habitId);
         HabitCompletion habitCompletion = completionMapper.toEntity(habitId);
         HabitCompletionResponse response = completionMapper.toResponse(
-                completionDao.saveCompletion(habitId, habitCompletion)
+                completionDao.saveCompletion(habitId, userId, habitCompletion)
         );
 
         //todo update streak
@@ -33,9 +31,9 @@ public class HabitCompletionService {
         return response;
     }
 
-    public List<HabitCompletionResponse> getHabitLogHistory(String habitId) {
+    public List<HabitCompletionResponse> getHabitLogHistory(String habitId, String userId) {
         log.info("Retrieving completions log for habit: {}", habitId);
-        List<HabitCompletion> history = completionDao.getHabitLogHistory(habitId);
+        List<HabitCompletion> history = completionDao.getHabitLogHistory(habitId, userId);
         log.info("Completion history for habit {} retrieved successfully", habitId);
         return completionMapper.toDtoList(history);
     }

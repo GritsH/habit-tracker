@@ -82,7 +82,7 @@ public class HabitController {
             description = "Record that the habit was completed"
     )
     public ResponseEntity<HabitCompletionResponse> logCompletion(@PathVariable String userId, @PathVariable String id) {
-        return ResponseEntity.ok(completionService.logCompletion(id));
+        return ResponseEntity.ok(completionService.logCompletion(id, userId));
     }
 
     @GetMapping("/{id}/completions")
@@ -91,7 +91,7 @@ public class HabitController {
             description = "Get all completion records for a habit"
     )
     public ResponseEntity<List<HabitCompletionResponse>> getHabitLogHistory(@PathVariable String userId, @PathVariable String id) {
-        return ResponseEntity.ok(completionService.getHabitLogHistory(id));
+        return ResponseEntity.ok(completionService.getHabitLogHistory(id, userId));
     }
 
     @GetMapping("/{id}/streak")
