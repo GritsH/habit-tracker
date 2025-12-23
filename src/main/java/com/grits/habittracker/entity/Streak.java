@@ -1,13 +1,18 @@
 package com.grits.habittracker.entity;
 
+import com.grits.habittracker.entity.habit.Habit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
+
+import java.time.LocalDate;
 
 
 @Entity
@@ -27,12 +32,16 @@ public class Streak {
     )
     private String id;
 
+    @Column(name = "last_updated")
+    private LocalDate lastUpdated;
+
     @Column(name = "current_streak_days")
     private Integer currentStreak = 0;
 
     @Column(name = "longest_streak_days")
     private Integer longestStreak = 0;
 
-    @Column(name = "habit_id")
-    private String habitId;
+    @OneToOne
+    @JoinColumn(name = "habit_id")
+    private Habit habit;
 }
