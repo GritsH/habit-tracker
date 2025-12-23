@@ -2,11 +2,11 @@ package com.grits.habittracker.controller;
 
 
 import com.grits.habittracker.model.request.CreateHabitRequest;
-import com.grits.habittracker.model.request.LogCompletionRequest;
 import com.grits.habittracker.model.request.UpdateHabitRequest;
 import com.grits.habittracker.model.response.HabitCompletionResponse;
 import com.grits.habittracker.model.response.HabitResponse;
 import com.grits.habittracker.model.response.StreakResponse;
+import com.grits.habittracker.service.habit.HabitCompletionService;
 import com.grits.habittracker.service.habit.HabitService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,9 +31,12 @@ public class HabitController {
 
     private final HabitService habitService;
 
+    private final HabitCompletionService completionService;
+
     @Autowired
-    public HabitController(HabitService habitService) {
+    public HabitController(HabitService habitService, HabitCompletionService completionService) {
         this.habitService = habitService;
+        this.completionService = completionService;
     }
 
     @GetMapping
@@ -79,8 +81,8 @@ public class HabitController {
             summary = "Log a habit completion",
             description = "Record that the habit was completed"
     )
-    public ResponseEntity<Void> logCompletion(@PathVariable String userId, @PathVariable String id, @RequestBody LogCompletionRequest logCompletionRequest) {
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<HabitCompletionResponse> logCompletion(@PathVariable String userId, @PathVariable String id) {
+        return ResponseEntity.ok(completionService.logCompletion(id, userId));
     }
 
     @GetMapping("/{id}/completions")
@@ -89,7 +91,7 @@ public class HabitController {
             description = "Get all completion records for a habit"
     )
     public ResponseEntity<List<HabitCompletionResponse>> getHabitLogHistory(@PathVariable String userId, @PathVariable String id) {
-        return ResponseEntity.ok(new ArrayList<>());
+        return ResponseEntity.ok(completionService.getHabitLogHistory(id, userId));
     }
 
     @GetMapping("/{id}/streak")
