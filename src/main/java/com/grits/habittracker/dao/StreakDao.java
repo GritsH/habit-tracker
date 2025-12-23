@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Component
 @RequiredArgsConstructor
 public class StreakDao {
@@ -44,7 +46,7 @@ public class StreakDao {
         streakRepository
                 .findAll()
                 .forEach(streak -> {
-                    if (wasMissed(streak, yesterday)) {
+                    if (isEmpty(streak.getLastUpdated()) || wasMissed(streak, yesterday)) {
                         streak.setCurrentStreak(0);
                     }
                 });
