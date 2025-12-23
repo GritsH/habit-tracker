@@ -25,8 +25,6 @@ public class HabitCompletionService {
         HabitCompletionResponse response = completionMapper.toResponse(
                 completionDao.saveCompletion(habitId, userId, habitCompletion)
         );
-
-        //todo update streak
         log.info("Habit {} logged successfully", habitId);
         return response;
     }

@@ -24,9 +24,8 @@ public class HabitCompletionDao {
         checkHabitOwnership(habitId, userId);
         String completionLog = habitId + "_" + LocalDate.now();
         completion.setCompletionLog(completionLog);
-
         try {
-            return completionRepository.saveAndFlush(completion);
+            return completionRepository.save(completion);
         } catch (DataIntegrityViolationException e) {
             throw new HabitAlreadyCompletedException(habitId);
         }
