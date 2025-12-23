@@ -9,5 +9,5 @@ public class StreakResponse {
 
     Integer longestStreak;
 
-    HabitResponse habit;
+    String habitId;
 }

@@ -22,7 +22,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -95,9 +94,9 @@ class HabitServiceTest {
     @Test
     @DisplayName("should delete a habit")
     void deleteHabit() {
-        habitService.deleteHabit("id123");
+        habitService.deleteHabit("id123", "id");
 
-        verify(habitDao).deleteHabit("id123");
+        verify(habitDao).deleteHabit("id123", "id");
     }
 
     @Test

@@ -4,7 +4,9 @@ import com.grits.habittracker.entity.User;
 import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.exception.HabitNotFoundException;
 import com.grits.habittracker.exception.HabitUpdateFailedException;
+import com.grits.habittracker.repository.StreakRepository;
 import com.grits.habittracker.repository.UserRepository;
+import com.grits.habittracker.repository.habit.HabitCompletionRepository;
 import com.grits.habittracker.repository.habit.HabitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -18,17 +20,22 @@ public class HabitDao {
 
     private final HabitRepository habitRepository;
 
+    private final StreakRepository streakRepository;
+
+    private final HabitCompletionRepository habitCompletionRepository;
+
     private final UserRepository userRepository;
 
     public Habit saveHabit(Habit habit, String userId) {
         User user = userRepository.getReferenceById(userId);
-
         habit.setUser(user);
-
         return habitRepository.save(habit);
     }
 
-    public void deleteHabit(String habitId) {
+    public void deleteHabit(String habitId, String userId) {
+        checkHabitOwnership(habitId, userId);
+        habitCompletionRepository.deleteAllByCompletionLogContaining(habitId);
+        streakRepository.deleteAllByHabitId(habitId);
         habitRepository.deleteById(habitId);
     }
 
@@ -46,5 +53,11 @@ public class HabitDao {
 
     public List<Habit> getUserHabits(String userId) {
         return habitRepository.findAllByUserId(userId);
+    }
+
+    private void checkHabitOwnership(String habitId, String userId) {
+        if (!habitRepository.existsByIdAndUserId(habitId, userId)) {
+            throw new HabitNotFoundException();
+        }
     }
 }

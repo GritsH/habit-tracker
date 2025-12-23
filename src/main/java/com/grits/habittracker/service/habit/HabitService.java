@@ -45,10 +45,10 @@ public class HabitService {
         return habitMapper.toDtoList(userHabits);
     }
 
-    public void deleteHabit(String habitId) {
+    public void deleteHabit(String habitId, String userId) {
         log.info("Delete attempt for a habit with id: {}", habitId);
 
-        habitDao.deleteHabit(habitId);
+        habitDao.deleteHabit(habitId, userId);
 
         log.info("Habit with id {} deleted successfully", habitId);
     }

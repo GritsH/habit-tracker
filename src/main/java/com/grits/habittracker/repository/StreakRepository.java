@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface StreakRepository extends JpaRepository<Streak, String> {
 
     Optional<Streak> findByHabitId(String id);
+
+    void deleteAllByHabitId(String habitId);
 }

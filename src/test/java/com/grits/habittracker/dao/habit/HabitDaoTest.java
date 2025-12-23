@@ -4,7 +4,9 @@ import com.grits.habittracker.entity.User;
 import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.model.type.CategoryType;
 import com.grits.habittracker.model.type.FrequencyType;
+import com.grits.habittracker.repository.StreakRepository;
 import com.grits.habittracker.repository.UserRepository;
+import com.grits.habittracker.repository.habit.HabitCompletionRepository;
 import com.grits.habittracker.repository.habit.HabitRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +21,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -29,6 +30,12 @@ class HabitDaoTest {
 
     @Mock
     private HabitRepository habitRepository;
+
+    @Mock
+    private HabitCompletionRepository habitCompletionRepository;
+
+    @Mock
+    private StreakRepository streakRepository;
 
     @Mock
     private UserRepository userRepository;
@@ -59,7 +66,9 @@ class HabitDaoTest {
     public void after() {
         verifyNoMoreInteractions(
                 habitRepository,
-                userRepository
+                userRepository,
+                habitCompletionRepository,
+                streakRepository
         );
     }
 
@@ -76,8 +85,11 @@ class HabitDaoTest {
     @Test
     @DisplayName("should delete a habit")
     void deleteHabit() {
-        habitDao.deleteHabit("id123");
+        when(habitRepository.existsByIdAndUserId("id123", "id")).thenReturn(true);
+        habitDao.deleteHabit("id123", "id");
 
+        verify(habitCompletionRepository).deleteAllByCompletionLogContaining("id123");
+        verify(streakRepository).deleteAllByHabitId("id123");
         verify(habitRepository).deleteById("id123");
     }
 
