@@ -86,7 +86,7 @@ class HabitDaoTest {
         when(habitRepository.existsByIdAndUserId("id123", "id")).thenReturn(true);
         habitDao.deleteHabit("id123", "id");
 
-        verify(habitCompletionRepository).deleteAllByCompletionLogContaining("id123");
+        verify(habitCompletionRepository).deleteAllByHabitId("id123");
         verify(streakRepository).deleteAllByHabitId("id123");
         verify(habitRepository).deleteById("id123");
     }

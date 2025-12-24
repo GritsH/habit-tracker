@@ -34,7 +34,7 @@ public class HabitDao {
 
     public void deleteHabit(String habitId, String userId) {
         checkHabitOwnership(habitId, userId);
-        habitCompletionRepository.deleteAllByCompletionLogContaining(habitId);
+        habitCompletionRepository.deleteAllByHabitId(habitId);
         streakRepository.deleteAllByHabitId(habitId);
         habitRepository.deleteById(habitId);
     }

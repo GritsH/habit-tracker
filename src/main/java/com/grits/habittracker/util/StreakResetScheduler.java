@@ -16,7 +16,7 @@ public class StreakResetScheduler {
 
     private final StreakDao streakDao;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "${scheduler.cron}")
     @Transactional(
             propagation = Propagation.REQUIRES_NEW,
             isolation = Isolation.READ_COMMITTED,

@@ -30,7 +30,7 @@ public class HabitCompletionService {
         HabitCompletionResponse response = completionMapper.toResponse(
                 completionDao.saveCompletion(habitId, userId, habitCompletion)
         );
-        streakDao.updateStreakContinuation(habitId);
+        streakDao.incrementStreak(habitId);
         log.info("Habit {} logged successfully", habitId);
         return response;
     }

@@ -11,5 +11,5 @@ public interface HabitCompletionRepository extends JpaRepository<HabitCompletion
 
     List<HabitCompletion> findAllByHabitId(String habitId);
 
-    void deleteAllByCompletionLogContaining(String habitId);
+    void deleteAllByHabitId(String habitId);
 }

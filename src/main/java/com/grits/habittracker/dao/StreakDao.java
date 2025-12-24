@@ -36,7 +36,7 @@ public class StreakDao {
         }
     }
 
-    public void updateStreakContinuation(String habitId) {
+    public void incrementStreak(String habitId) {
         Streak streak = streakRepository.findByHabitId(habitId).orElseThrow(() -> new StreakNotFoundException(habitId));
         streak.setLastUpdated(LocalDate.now());
         streak.setCurrentStreak(streak.getCurrentStreak() + 1);
