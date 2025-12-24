@@ -1,9 +1,9 @@
 package com.grits.habittracker.dao;
 
 import com.grits.habittracker.entity.Streak;
-import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.exception.HabitNotFoundException;
 import com.grits.habittracker.exception.StreakNotFoundException;
+import com.grits.habittracker.model.type.FrequencyType;
 import com.grits.habittracker.repository.StreakRepository;
 import com.grits.habittracker.repository.habit.HabitRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Component
 @RequiredArgsConstructor
@@ -21,14 +21,22 @@ public class StreakDao {
 
     private final HabitRepository habitRepository;
 
-    public void save(String habitId) {
-        Habit habit = habitRepository.getReferenceById(habitId);
+    public void save(String habitId, FrequencyType frequency) {
         Streak streak = new Streak();
-        streak.setHabit(habit);
+        streak.setFrequency(frequency);
+        streak.setHabitId(habitId);
         streakRepository.save(streak);
     }
 
-    public void updateStreak(String habitId) {
+    public void updateStreak(String habitId, FrequencyType frequency) {
+        if (isNotEmpty(frequency)) {
+            Streak streak = streakRepository.findByHabitId(habitId).orElseThrow(() -> new StreakNotFoundException(habitId));
+            streak.setFrequency(frequency);
+            streakRepository.save(streak);
+        }
+    }
+
+    public void updateStreakContinuation(String habitId) {
         Streak streak = streakRepository.findByHabitId(habitId).orElseThrow(() -> new StreakNotFoundException(habitId));
         streak.setLastUpdated(LocalDate.now());
         streak.setCurrentStreak(streak.getCurrentStreak() + 1);
@@ -36,24 +44,16 @@ public class StreakDao {
         streakRepository.save(streak);
     }
 
+    public void resetAllMissedStreaks() {
+        int batchUpdated;
+        do {
+            batchUpdated = streakRepository.resetMissedStreaks(1000);
+        } while (batchUpdated > 0);
+    }
+
     public Streak getStreak(String habitId, String userId) {
         checkHabitOwnership(habitId, userId);
         return streakRepository.findByHabitId(habitId).orElseThrow(() -> new StreakNotFoundException(habitId));
-    }
-
-    public void resetStreaks() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        streakRepository
-                .findAll()
-                .forEach(streak -> {
-                    if (isEmpty(streak.getLastUpdated()) || wasMissed(streak, yesterday)) {
-                        streak.setCurrentStreak(0);
-                    }
-                });
-    }
-
-    private boolean wasMissed(Streak streak, LocalDate yesterday) {
-        return streak.getHabit().getFrequency().wasMissed(streak.getLastUpdated(), yesterday);
     }
 
     private void checkHabitOwnership(String habitId, String userId) {

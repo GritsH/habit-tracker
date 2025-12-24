@@ -1,11 +1,11 @@
 package com.grits.habittracker.entity;
 
-import com.grits.habittracker.entity.habit.Habit;
+import com.grits.habittracker.model.type.FrequencyType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class Streak {
     private String id;
 
     @Column(name = "last_updated")
-    private LocalDate lastUpdated;
+    private LocalDate lastUpdated = LocalDate.now();
 
     @Column(name = "current_streak_days")
     private Integer currentStreak = 0;
@@ -41,7 +41,9 @@ public class Streak {
     @Column(name = "longest_streak_days")
     private Integer longestStreak = 0;
 
-    @OneToOne
-    @JoinColumn(name = "habit_id")
-    private Habit habit;
+    @Column(name = "habit_id")
+    private String habitId;
+
+    @Enumerated(EnumType.STRING)
+    private FrequencyType frequency;
 }

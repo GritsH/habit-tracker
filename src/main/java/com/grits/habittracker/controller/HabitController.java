@@ -58,9 +58,7 @@ public class HabitController {
             description = "Add a new habit for user"
     )
     public ResponseEntity<HabitResponse> createNewHabit(@RequestBody CreateHabitRequest createHabitRequest, @PathVariable String userId) {
-        HabitResponse newHabit = habitService.createNewHabit(userId, createHabitRequest);
-        streakService.createNewStreak(newHabit.getId());
-        return ResponseEntity.ok(newHabit);
+        return ResponseEntity.ok(habitService.createNewHabit(userId, createHabitRequest));
     }
 
     @DeleteMapping("/{id}")
@@ -88,9 +86,7 @@ public class HabitController {
             description = "Record that the habit was completed"
     )
     public ResponseEntity<HabitCompletionResponse> logCompletion(@PathVariable String userId, @PathVariable String id) {
-        HabitCompletionResponse response = completionService.logCompletion(id, userId);
-        streakService.updateStreak(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(completionService.logCompletion(id, userId));
     }
 
     @GetMapping("/{id}/completions")

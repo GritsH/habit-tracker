@@ -1,0 +1,1 @@
+create index idx_streak_frequency_last_updated on habittracker.streak(frequency, last_updated);

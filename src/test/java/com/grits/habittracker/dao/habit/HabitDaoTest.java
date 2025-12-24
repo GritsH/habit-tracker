@@ -3,7 +3,6 @@ package com.grits.habittracker.dao.habit;
 import com.grits.habittracker.entity.User;
 import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.model.type.CategoryType;
-import com.grits.habittracker.model.type.FrequencyType;
 import com.grits.habittracker.repository.StreakRepository;
 import com.grits.habittracker.repository.UserRepository;
 import com.grits.habittracker.repository.habit.HabitCompletionRepository;
@@ -57,7 +56,6 @@ class HabitDaoTest {
         habit.setName("Exercise");
         habit.setDescription("Daily exercise");
         habit.setCategory(CategoryType.OTHER);
-        habit.setFrequency(FrequencyType.DAILY);
         habit.setStartDate(LocalDate.now());
         habit.setUser(user);
     }

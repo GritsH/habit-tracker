@@ -4,5 +4,5 @@ create table habittracker.streak (
     current_streak_days int,
     longest_streak_days int,
     habit_id            varchar(36) not null,
-    foreign key (habit_id) references habittracker.habit (id)
+    frequency           varchar(36) not null
 );

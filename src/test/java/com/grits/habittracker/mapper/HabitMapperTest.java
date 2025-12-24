@@ -29,7 +29,6 @@ class HabitMapperTest {
         habit.setName("Exercise");
         habit.setDescription("Daily exercise");
         habit.setCategory(CategoryType.OTHER);
-        habit.setFrequency(FrequencyType.DAILY);
         habit.setCreatedAt(LocalDate.now());
         habit.setStartDate(LocalDate.of(2026, 2, 1));
         habit.setUser(new User());
@@ -80,7 +79,6 @@ class HabitMapperTest {
                 .isEqualTo(habit);
 
         assertThat(response.getCategory()).isEqualTo(CategoryType.OTHER);
-        assertThat(response.getFrequency()).isEqualTo(FrequencyType.DAILY);
     }
 
     @Test
@@ -102,7 +100,6 @@ class HabitMapperTest {
                 .ignoringFields("user", "frequency", "category")
                 .isEqualTo(habit);
         assertThat(responses.get(0).getCategory()).isEqualTo(CategoryType.OTHER);
-        assertThat(responses.get(0).getFrequency()).isEqualTo(FrequencyType.DAILY);
     }
 
     @Test
@@ -123,7 +120,6 @@ class HabitMapperTest {
         habit.setName("Old Exercise");
         habit.setDescription("Old description");
         habit.setCategory(CategoryType.MENTAL_HEALTH);
-        habit.setFrequency(FrequencyType.DAILY);
         habit.setStartDate(LocalDate.of(2025, 12, 1));
         habit.setCreatedAt(LocalDate.now());
         habit.setUser(new User());
@@ -158,7 +154,6 @@ class HabitMapperTest {
         habit.setName("Old Exercise");
         habit.setDescription("Old description");
         habit.setCategory(CategoryType.MENTAL_HEALTH);
-        habit.setFrequency(FrequencyType.DAILY);
         habit.setStartDate(LocalDate.of(2025, 12, 1));
         habit.setCreatedAt(LocalDate.now());
         habit.setUser(new User());
