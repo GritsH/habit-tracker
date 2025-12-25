@@ -1,5 +1,6 @@
 package com.grits.habittracker.service.habit;
 
+import com.grits.habittracker.dao.StreakDao;
 import com.grits.habittracker.dao.habit.HabitDao;
 import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.exception.HabitNotFoundException;
@@ -8,7 +9,6 @@ import com.grits.habittracker.model.request.CreateHabitRequest;
 import com.grits.habittracker.model.request.UpdateHabitRequest;
 import com.grits.habittracker.model.response.HabitResponse;
 import com.grits.habittracker.model.type.CategoryType;
-import com.grits.habittracker.model.type.FrequencyType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -32,6 +31,9 @@ class HabitServiceTest {
 
     @Mock
     private HabitDao habitDao;
+
+    @Mock
+    private StreakDao streakDao;
 
     @Mock
     private HabitMapper habitMapper;
@@ -55,11 +57,8 @@ class HabitServiceTest {
     public void after() {
         verifyNoMoreInteractions(
                 habitDao,
-                habitMapper,
-                updateHabitRequest,
-                createHabitRequest,
-                habitResponse,
-                habit
+                streakDao,
+                habitMapper
         );
     }
 
@@ -73,6 +72,7 @@ class HabitServiceTest {
         HabitResponse result = habitService.createNewHabit("id", createHabitRequest);
 
         verify(habitDao).saveHabit(habit, "id");
+        verify(streakDao).save(habit.getId(), createHabitRequest.getFrequency());
 
         assertThat(result).isSameAs(habitResponse);
     }
@@ -95,9 +95,9 @@ class HabitServiceTest {
     @Test
     @DisplayName("should delete a habit")
     void deleteHabit() {
-        habitService.deleteHabit("id123");
+        habitService.deleteHabit("id123", "id");
 
-        verify(habitDao).deleteHabit("id123");
+        verify(habitDao).deleteHabit("id123", "id");
     }
 
     @Test
@@ -107,7 +107,6 @@ class HabitServiceTest {
         updatedHabit.setId("id123");
         updatedHabit.setName("Updated Exercise");
         updatedHabit.setCategory(CategoryType.MENTAL_HEALTH);
-        updatedHabit.setFrequency(FrequencyType.WEEKLY);
 
         HabitResponse updatedResponse = new HabitResponse(
                 "id123",
@@ -116,7 +115,6 @@ class HabitServiceTest {
                 LocalDate.now(),
                 LocalDate.of(2026, 10, 1),
                 "Updated description",
-                FrequencyType.WEEKLY,
                 CategoryType.MENTAL_HEALTH
         );
 
@@ -127,6 +125,7 @@ class HabitServiceTest {
         HabitResponse result = habitService.updateHabit("id123", updateHabitRequest);
 
         verify(habitMapper).updateHabit(updateHabitRequest, habit);
+        verify(streakDao).updateStreak("id123", updateHabitRequest.getFrequency());
 
         assertThat(result).isNotNull();
         assertThat(result).usingRecursiveComparison().isEqualTo(updatedResponse);

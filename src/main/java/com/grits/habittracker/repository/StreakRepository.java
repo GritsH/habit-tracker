@@ -2,6 +2,9 @@ package com.grits.habittracker.repository;
 
 import com.grits.habittracker.entity.Streak;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -10,4 +13,16 @@ import java.util.Optional;
 public interface StreakRepository extends JpaRepository<Streak, String> {
 
     Optional<Streak> findByHabitId(String id);
+
+    void deleteAllByHabitId(String habitId);
+
+    @Modifying
+    @Query(value = """
+            UPDATE habittracker.streak s 
+            SET s.current_streak_days = 0
+            WHERE DATE(s.reset_at) < DATE(NOW())
+            AND s.current_streak_days > 0
+            LIMIT :batchSize
+            """, nativeQuery = true)
+    int resetMissedStreaks(@Param("batchSize") int batchSize);
 }

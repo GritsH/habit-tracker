@@ -5,7 +5,6 @@ create table habittracker.habit (
     created_at        date,
     start_date        date,
     habit_description text,
-    frequency         varchar(36) not null,
     category          varchar(36) not null,
     user_id           varchar(36) not null,
     foreign key (user_id) references habittracker.user (id)

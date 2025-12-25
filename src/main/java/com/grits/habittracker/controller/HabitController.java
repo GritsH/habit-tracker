@@ -6,6 +6,7 @@ import com.grits.habittracker.model.request.UpdateHabitRequest;
 import com.grits.habittracker.model.response.HabitCompletionResponse;
 import com.grits.habittracker.model.response.HabitResponse;
 import com.grits.habittracker.model.response.StreakResponse;
+import com.grits.habittracker.service.StreakService;
 import com.grits.habittracker.service.habit.HabitCompletionService;
 import com.grits.habittracker.service.habit.HabitService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,10 +34,13 @@ public class HabitController {
 
     private final HabitCompletionService completionService;
 
+    private final StreakService streakService;
+
     @Autowired
-    public HabitController(HabitService habitService, HabitCompletionService completionService) {
+    public HabitController(HabitService habitService, HabitCompletionService completionService, StreakService streakService) {
         this.habitService = habitService;
         this.completionService = completionService;
+        this.streakService = streakService;
     }
 
     @GetMapping
@@ -63,7 +67,7 @@ public class HabitController {
             description = "Deletes the habit if found"
     )
     public ResponseEntity<Void> deleteHabit(@PathVariable String userId, @PathVariable String id) {
-        habitService.deleteHabit(id);
+        habitService.deleteHabit(id, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -100,6 +104,6 @@ public class HabitController {
             description = "Shows statistics for habit completions"
     )
     public ResponseEntity<StreakResponse> getHabitStreakHistory(@PathVariable String userId, @PathVariable String id) {
-        return null; // ResponseEntity.ok(new Object());
+        return ResponseEntity.ok(streakService.getStreak(id, userId));
     }
 }

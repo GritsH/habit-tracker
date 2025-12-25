@@ -2,7 +2,6 @@ package com.grits.habittracker.entity.habit;
 
 import com.grits.habittracker.entity.User;
 import com.grits.habittracker.model.type.CategoryType;
-import com.grits.habittracker.model.type.FrequencyType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -55,9 +54,6 @@ public class Habit {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @Enumerated(EnumType.STRING)
-    private FrequencyType frequency;
 
     @Enumerated(EnumType.STRING)
     private CategoryType category;
