@@ -3,5 +3,4 @@
     <include file="/db/xml/habit.xml"/>
     <include file="/db/xml/habit-completion.xml"/>
     <include file="/db/xml/streak.xml"/>
-    <include file="/db/xml/index/streak-index.xml"/>
 </databaseChangeLog>

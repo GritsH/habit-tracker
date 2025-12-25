@@ -32,8 +32,8 @@ public class Streak {
     )
     private String id;
 
-    @Column(name = "last_updated")
-    private LocalDate lastUpdated = LocalDate.now();
+    @Column(name = "reset_at")
+    private LocalDate resetAt;
 
     @Column(name = "current_streak_days")
     private Integer currentStreak = 0;

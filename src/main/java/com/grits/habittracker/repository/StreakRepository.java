@@ -19,14 +19,8 @@ public interface StreakRepository extends JpaRepository<Streak, String> {
     @Modifying
     @Query(value = """
             UPDATE habittracker.streak s 
-            SET s.current_streak_days = 0, 
-                s.last_updated = CURRENT_DATE
-            WHERE (s.frequency = 'DAILY' AND s.last_updated < DATE_SUB(CURDATE(), INTERVAL 1 DAY)) OR 
-                  (s.frequency = 'EVERY_TWO_DAYS' AND s.last_updated < DATE_SUB(CURDATE(), INTERVAL 2 DAY)) OR 
-                  (s.frequency = 'EVERY_THREE_DAYS' AND s.last_updated < DATE_SUB(CURDATE(), INTERVAL 3 DAY)) OR 
-                  (s.frequency = 'WEEKLY' AND s.last_updated < DATE_SUB(CURDATE(), INTERVAL 7 DAY)) OR 
-                  (s.frequency = 'BIWEEKLY' AND s.last_updated < DATE_SUB(CURDATE(), INTERVAL 14 DAY)) OR 
-                  (s.frequency = 'MONTHLY' AND s.last_updated < DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+            SET s.current_streak_days = 0
+            WHERE DATE(s.reset_at) < DATE(NOW())
             AND s.current_streak_days > 0
             LIMIT :batchSize
             """, nativeQuery = true)
