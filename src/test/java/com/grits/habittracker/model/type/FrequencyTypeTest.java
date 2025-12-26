@@ -18,7 +18,7 @@ class FrequencyTypeTest {
     }
 
     @Test
-    @DisplayName("Should update resetAt date and return two days after tomorrow")
+    @DisplayName("Should update resetAt date and return day after tomorrow")
     void updateResetAtEveryTwoDays() {
         LocalDate result = FrequencyType.EVERY_TWO_DAYS.updateResetAt();
 
