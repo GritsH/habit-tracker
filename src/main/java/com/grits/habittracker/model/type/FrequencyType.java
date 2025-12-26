@@ -17,7 +17,7 @@ public enum FrequencyType {
         this.resetAt = resetAt;
     }
 
-    public LocalDate updateResetAt() {
+    public LocalDate calculateResetAt() {
         return resetAt.apply(LocalDate.now());
     }
 }

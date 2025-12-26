@@ -1,12 +1,14 @@
 package com.grits.habittracker.exception;
 
-public class HabitNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class HabitNotFoundException extends GlobalServiceException {
 
     public HabitNotFoundException(String habitId) {
-        super("Habit with id " + habitId + " not found");
+        super("Habit with id " + habitId + " not found", HttpStatus.NOT_FOUND);
     }
 
     public HabitNotFoundException() {
-        super("No information could be retrieved");
+        super("No information could be retrieved", HttpStatus.NOT_FOUND);
     }
 }

@@ -1,8 +1,10 @@
 package com.grits.habittracker.exception;
 
-public class HabitAlreadyCompletedException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class HabitAlreadyCompletedException extends GlobalServiceException {
 
     public HabitAlreadyCompletedException(String habitId) {
-        super("Habit " + habitId + " already logged as completed");
+        super("Habit " + habitId + " already logged as completed", HttpStatus.CONFLICT);
     }
 }

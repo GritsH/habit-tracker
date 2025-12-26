@@ -43,7 +43,7 @@ public class StreakDao {
         } else {
             streak.setCurrentStreak(streak.getCurrentStreak() + 1);
         }
-        streak.setResetAt(streak.getFrequency().updateResetAt());
+        streak.setResetAt(streak.getFrequency().calculateResetAt());
         streak.setLongestStreak(Math.max(streak.getCurrentStreak(), streak.getLongestStreak()));
         streakRepository.save(streak);
     }

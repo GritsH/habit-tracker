@@ -12,44 +12,44 @@ class FrequencyTypeTest {
     @Test
     @DisplayName("Should update resetAt date and return tomorrow")
     void updateResetAtDaily() {
-        LocalDate result = FrequencyType.DAILY.updateResetAt();
+        LocalDate today = LocalDate.now();
+        LocalDate result = FrequencyType.DAILY.calculateResetAt();
 
-        assertThat(result).isEqualTo(LocalDate.now().plusDays(1));
+        assertThat(result).isEqualTo(today.plusDays(1));
     }
 
     @Test
     @DisplayName("Should update resetAt date and return day after tomorrow")
     void updateResetAtEveryTwoDays() {
-        LocalDate result = FrequencyType.EVERY_TWO_DAYS.updateResetAt();
+        LocalDate today = LocalDate.now();
+        LocalDate result = FrequencyType.EVERY_TWO_DAYS.calculateResetAt();
 
-        assertThat(result).isEqualTo(LocalDate.now().plusDays(2));
+        assertThat(result).isEqualTo(today.plusDays(2));
     }
 
     @Test
     @DisplayName("Should update resetAt date and return the same day next week")
     void updateResetAtWeekly() {
-        LocalDate result = FrequencyType.WEEKLY.updateResetAt();
         LocalDate today = LocalDate.now();
+        LocalDate result = FrequencyType.WEEKLY.calculateResetAt();
 
         assertThat(result).isEqualTo(today.plusDays(7));
-        assertThat(result.getDayOfWeek()).isEqualTo(today.getDayOfWeek());
     }
 
     @Test
     @DisplayName("Should update resetAt date and return the same day next fortnight")
     void updateResetAtBiweekly() {
-        LocalDate result = FrequencyType.BIWEEKLY.updateResetAt();
         LocalDate today = LocalDate.now();
+        LocalDate result = FrequencyType.BIWEEKLY.calculateResetAt();
 
         assertThat(result).isEqualTo(today.plusWeeks(2));
-        assertThat(result.getDayOfWeek()).isEqualTo(today.getDayOfWeek());
     }
 
     @Test
     @DisplayName("Should update resetAt date and return the same day next month")
     void updateResetAtMonthly() {
-        LocalDate result = FrequencyType.MONTHLY.updateResetAt();
         LocalDate today = LocalDate.now();
+        LocalDate result = FrequencyType.MONTHLY.calculateResetAt();
 
         assertThat(result.getYear()).isGreaterThanOrEqualTo(today.getYear());
         assertThat(result.getDayOfMonth()).isEqualTo(today.getDayOfMonth());
