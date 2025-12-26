@@ -7,53 +7,46 @@ import com.grits.habittracker.exception.InvalidCredentialsException;
 import com.grits.habittracker.exception.UserAlreadyExistsException;
 import com.grits.habittracker.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public @ResponseBody String handleInternalServerError(Exception ex) {
-        return ex.getMessage();
+    public @ResponseBody ErrorResponse handleInternalServerError(Exception ex) {
+        return ErrorResponse.create(ex, HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
     @ExceptionHandler(value = InvalidCredentialsException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public @ResponseBody String handleInvalidCredentialsException(InvalidCredentialsException ex) {
-        return ex.getMessage();
+    public @ResponseBody ErrorResponse handleInvalidCredentialsException(InvalidCredentialsException ex) {
+        return ErrorResponse.create(ex, HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     @ExceptionHandler(value = UserAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public @ResponseBody String handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
-        return ex.getMessage();
+    public @ResponseBody ErrorResponse handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        return ErrorResponse.create(ex, HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(value = UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody String handleUserNotFoundException(UserNotFoundException ex) {
-        return ex.getMessage();
+    public @ResponseBody ErrorResponse handleUserNotFoundException(UserNotFoundException ex) {
+        return ErrorResponse.create(ex, HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(value = HabitNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody String handleHabitNotFoundException(HabitNotFoundException ex) {
-        return ex.getMessage();
+    public @ResponseBody ErrorResponse handleHabitNotFoundException(HabitNotFoundException ex) {
+        return ErrorResponse.create(ex, HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(value = HabitUpdateFailedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public @ResponseBody String handleHabitUpdateFailedException(HabitUpdateFailedException ex) {
-        return ex.getMessage();
+    public @ResponseBody ErrorResponse handleHabitUpdateFailedException(HabitUpdateFailedException ex) {
+        return ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(value = HabitAlreadyCompletedException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public @ResponseBody String handleHabitAlreadyCompletedException(HabitAlreadyCompletedException ex) {
-        return ex.getMessage();
+    public @ResponseBody ErrorResponse handleHabitAlreadyCompletedException(HabitAlreadyCompletedException ex) {
+        return ErrorResponse.create(ex, HttpStatus.CONFLICT, ex.getMessage());
     }
 }
