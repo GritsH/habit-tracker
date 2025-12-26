@@ -73,6 +73,7 @@ class HabitDaoTest {
     @Test
     @DisplayName("should save a new habit")
     void saveHabit() {
+        when(userRepository.existsById("id")).thenReturn(true);
         when(userRepository.getReferenceById("id")).thenReturn(user);
 
         habitDao.saveHabit(habit, "id");

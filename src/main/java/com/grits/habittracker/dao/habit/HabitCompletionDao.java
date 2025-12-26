@@ -6,7 +6,6 @@ import com.grits.habittracker.exception.HabitNotFoundException;
 import com.grits.habittracker.repository.habit.HabitCompletionRepository;
 import com.grits.habittracker.repository.habit.HabitRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -23,12 +22,11 @@ public class HabitCompletionDao {
     public HabitCompletion saveCompletion(String habitId, String userId, HabitCompletion completion) {
         checkHabitOwnership(habitId, userId);
         String completionLog = habitId + "_" + LocalDate.now();
-        completion.setCompletionLog(completionLog);
-        try {
-            return completionRepository.save(completion);
-        } catch (DataIntegrityViolationException e) {
+        if (completionRepository.existsByCompletionLog(completionLog)) {
             throw new HabitAlreadyCompletedException(habitId);
         }
+        completion.setCompletionLog(completionLog);
+        return completionRepository.save(completion);
     }
 
     public List<HabitCompletion> getHabitLogHistory(String habitId, String userId) {

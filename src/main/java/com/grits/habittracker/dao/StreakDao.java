@@ -43,7 +43,7 @@ public class StreakDao {
         } else {
             streak.setCurrentStreak(streak.getCurrentStreak() + 1);
         }
-        updateResetAt(streak);
+        streak.setResetAt(streak.getFrequency().calculateResetAt());
         streak.setLongestStreak(Math.max(streak.getCurrentStreak(), streak.getLongestStreak()));
         streakRepository.save(streak);
     }
@@ -63,17 +63,6 @@ public class StreakDao {
     private void checkHabitOwnership(String habitId, String userId) {
         if (!habitRepository.existsByIdAndUserId(habitId, userId)) {
             throw new HabitNotFoundException();
-        }
-    }
-
-    private void updateResetAt(Streak streak) {
-        switch (streak.getFrequency()) {
-            case DAILY -> streak.setResetAt(LocalDate.now().plusDays(1));
-            case EVERY_TWO_DAYS -> streak.setResetAt(LocalDate.now().plusDays(2));
-            case EVERY_THREE_DAYS -> streak.setResetAt(LocalDate.now().plusDays(3));
-            case WEEKLY -> streak.setResetAt(LocalDate.now().plusWeeks(1));
-            case BIWEEKLY -> streak.setResetAt(LocalDate.now().plusWeeks(2));
-            case MONTHLY -> streak.setResetAt(LocalDate.now().plusMonths(1));
         }
     }
 }

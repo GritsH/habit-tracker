@@ -4,6 +4,7 @@ import com.grits.habittracker.entity.User;
 import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.exception.HabitNotFoundException;
 import com.grits.habittracker.exception.HabitUpdateFailedException;
+import com.grits.habittracker.exception.UserNotFoundException;
 import com.grits.habittracker.repository.StreakRepository;
 import com.grits.habittracker.repository.UserRepository;
 import com.grits.habittracker.repository.habit.HabitCompletionRepository;
@@ -27,6 +28,9 @@ public class HabitDao {
     private final UserRepository userRepository;
 
     public Habit saveHabit(Habit habit, String userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException(userId);
+        }
         User user = userRepository.getReferenceById(userId);
         habit.setUser(user);
         return habitRepository.save(habit);

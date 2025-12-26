@@ -1,10 +1,12 @@
 package com.grits.habittracker.exception;
 
-public class UserAlreadyExistsException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class UserAlreadyExistsException extends GlobalServiceException {
 
     private static final String MESSAGE = "User with this email/username already exists";
 
     public UserAlreadyExistsException() {
-        super(MESSAGE);
+        super(MESSAGE, HttpStatus.CONFLICT);
     }
 }
