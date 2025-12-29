@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class StreakService {
 
     private final StreakDao streakDao;

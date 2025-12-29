@@ -8,6 +8,7 @@ import com.grits.habittracker.model.response.HabitCompletionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class HabitCompletionService {
 
     private final HabitCompletionMapper completionMapper;
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public HabitCompletionResponse logCompletion(String habitId, String userId) {
         log.info("Logging completion for habit: {}", habitId);
         HabitCompletion habitCompletion = completionMapper.toEntity(habitId);

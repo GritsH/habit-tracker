@@ -10,6 +10,7 @@ import com.grits.habittracker.model.response.HabitResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,7 +18,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class HabitService {
 
     private final HabitDao habitDao;
@@ -26,6 +26,7 @@ public class HabitService {
 
     private final HabitMapper habitMapper;
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public HabitResponse createNewHabit(String userId, CreateHabitRequest createHabitRequest) {
         log.info("Saving new habit for user {}", userId);
         Habit habit = habitMapper.toHabit(createHabitRequest);
@@ -42,12 +43,14 @@ public class HabitService {
         return habitMapper.toDtoList(userHabits);
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void deleteHabit(String habitId, String userId) {
         log.info("Delete attempt for a habit with id: {}", habitId);
         habitDao.deleteHabit(habitId, userId);
         log.info("Habit with id {} deleted successfully", habitId);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public HabitResponse updateHabit(String habitId, UpdateHabitRequest updateHabitRequest) {
         log.info("Updating habit with id: {}", habitId);
         Habit habit = habitDao.getHabitById(habitId);
