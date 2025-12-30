@@ -24,7 +24,7 @@ public class HabitCompletionService {
 
     private final HabitCompletionMapper completionMapper;
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public HabitCompletionResponse logCompletion(String habitId, String userId) {
         log.info("Logging completion for habit: {}", habitId);
         HabitCompletion habitCompletion = completionMapper.toEntity(habitId);
@@ -36,6 +36,7 @@ public class HabitCompletionService {
         return response;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<HabitCompletionResponse> getHabitLogHistory(String habitId, String userId) {
         log.info("Retrieving completions log for habit: {}", habitId);
         List<HabitCompletion> history = completionDao.getHabitLogHistory(habitId, userId);
