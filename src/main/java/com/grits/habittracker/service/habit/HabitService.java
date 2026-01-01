@@ -36,6 +36,7 @@ public class HabitService {
         return response;
     }
 
+    @Transactional(readOnly = true)
     public List<HabitResponse> getAllHabits(String userId) {
         log.info("Retrieving habits for user {}", userId);
         List<Habit> userHabits = habitDao.getUserHabits(userId);
@@ -49,7 +50,6 @@ public class HabitService {
         log.info("Habit with id {} deleted successfully", habitId);
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
     public HabitResponse updateHabit(String habitId, UpdateHabitRequest updateHabitRequest) {
         log.info("Updating habit with id: {}", habitId);
         Habit habit = habitDao.getHabitById(habitId);
