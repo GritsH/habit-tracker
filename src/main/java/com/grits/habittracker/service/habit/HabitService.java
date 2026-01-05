@@ -10,6 +10,7 @@ import com.grits.habittracker.model.response.HabitResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
+@Transactional(isolation = Isolation.REPEATABLE_READ)
 public class HabitService {
 
     private final HabitDao habitDao;
@@ -35,6 +36,7 @@ public class HabitService {
         return response;
     }
 
+    @Transactional(readOnly = true)
     public List<HabitResponse> getAllHabits(String userId) {
         log.info("Retrieving habits for user {}", userId);
         List<Habit> userHabits = habitDao.getUserHabits(userId);

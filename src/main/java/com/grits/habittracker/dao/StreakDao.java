@@ -3,9 +3,11 @@ package com.grits.habittracker.dao;
 import com.grits.habittracker.entity.Streak;
 import com.grits.habittracker.exception.HabitNotFoundException;
 import com.grits.habittracker.exception.StreakNotFoundException;
+import com.grits.habittracker.exception.StreakUpdateFailedException;
 import com.grits.habittracker.model.type.FrequencyType;
 import com.grits.habittracker.repository.StreakRepository;
 import com.grits.habittracker.repository.habit.HabitRepository;
+import jakarta.persistence.PessimisticLockException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +39,12 @@ public class StreakDao {
     }
 
     public void incrementStreak(String habitId) {
-        Streak streak = streakRepository.findByHabitId(habitId).orElseThrow(() -> new StreakNotFoundException(habitId));
+        Streak streak;
+        try {
+            streak = streakRepository.findByHabitIdWithLock(habitId).orElseThrow(() -> new StreakNotFoundException(habitId));
+        } catch (PessimisticLockException e) {
+            throw new StreakUpdateFailedException(habitId);
+        }
         if (isNotEmpty(streak.getResetAt()) && streak.getResetAt().isBefore(LocalDate.now())) {
             streak.setCurrentStreak(1);
         } else {
