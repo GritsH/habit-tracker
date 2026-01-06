@@ -1,5 +1,6 @@
 package com.grits.habittracker.model.response;
 
+import com.grits.habittracker.model.type.FrequencyType;
 import lombok.Value;
 
 import java.time.LocalDate;
@@ -13,5 +14,7 @@ public class StreakResponse {
 
     String habitId;
 
-    LocalDate lastUpdated;
+    LocalDate resetAt;
+
+    FrequencyType frequency;
 }
