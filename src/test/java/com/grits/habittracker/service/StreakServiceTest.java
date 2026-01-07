@@ -4,7 +4,6 @@ import com.grits.habittracker.dao.StreakDao;
 import com.grits.habittracker.entity.Streak;
 import com.grits.habittracker.mapper.StreakMapper;
 import com.grits.habittracker.model.response.StreakResponse;
-import com.grits.habittracker.model.type.FrequencyType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,9 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -42,18 +40,9 @@ class StreakServiceTest {
     @Test
     @DisplayName("should get a streak for a habit")
     void getStreak() {
-        Streak streak = new Streak();
-        streak.setLongestStreak(10);
-        streak.setCurrentStreak(10);
-        streak.setFrequency(FrequencyType.DAILY);
-        streak.setHabitId("habit_id");
-        StreakResponse streakResponse = new StreakResponse(
-                10,
-                10,
-                "habit_id",
-                LocalDate.now(),
-                FrequencyType.DAILY
-        );
+        Streak streak = mock(Streak.class);
+        StreakResponse streakResponse = mock(StreakResponse.class);
+
         when(streakDao.getStreak("habit_id", "user_id")).thenReturn(streak);
         when(streakMapper.toDto(streak)).thenReturn(streakResponse);
 

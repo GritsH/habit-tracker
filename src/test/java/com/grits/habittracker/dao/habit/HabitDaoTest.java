@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -47,17 +48,19 @@ class HabitDaoTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setId("id001");
-        user.setUsername("username");
+        user = mock(User.class);
+//        user = new User();
+//        user.setId("id001");
+//        user.setUsername("username");
 
-        habit = new Habit();
-        habit.setId("id123");
-        habit.setName("Exercise");
-        habit.setDescription("Daily exercise");
-        habit.setCategory(CategoryType.OTHER);
-        habit.setStartDate(LocalDate.now());
-        habit.setUser(user);
+        habit = mock(Habit.class);
+//        habit = new Habit();
+//        habit.setId("id123");
+//        habit.setName("Exercise");
+//        habit.setDescription("Daily exercise");
+//        habit.setCategory(CategoryType.OTHER);
+//        habit.setStartDate(LocalDate.now());
+//        habit.setUser(user);
     }
 
     @AfterEach

@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -75,6 +76,7 @@ class StreakDaoTest {
         when(streakRepository.findByHabitId("habit_id")).thenReturn(Optional.of(streak));
 
         streakDao.updateStreak("habit_id", FrequencyType.WEEKLY);
+
         assertThat(streak.getFrequency()).isEqualTo(FrequencyType.WEEKLY);
 
         verify(streakRepository).save(streak);

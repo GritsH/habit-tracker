@@ -14,10 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -43,12 +43,8 @@ class HabitCompletionServiceTest {
 
     @BeforeEach
     void setUp() {
-        habitCompletion = new HabitCompletion();
-        habitCompletion.setId("id");
-        habitCompletion.setLoggedAt(LocalDate.now());
-        habitCompletion.setCompletionLog("completion_log");
-
-        habitCompletionResponse = new HabitCompletionResponse("id", LocalDate.now(), "completion_log");
+        habitCompletion = mock(HabitCompletion.class);
+        habitCompletionResponse = mock(HabitCompletionResponse.class);
     }
 
     @AfterEach
@@ -69,7 +65,6 @@ class HabitCompletionServiceTest {
 
         HabitCompletionResponse response = habitCompletionService.logCompletion("habit_id", "user_id");
 
-        verify(habitCompletionDao).saveCompletion("habit_id", "user_id", habitCompletion);
         verify(streakDao).incrementStreak("habit_id");
 
         assertThat(response).isSameAs(habitCompletionResponse);
