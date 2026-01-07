@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -36,23 +37,8 @@ class UserDaoTest {
 
     @BeforeEach
     void setUp() {
-        String encodedPassword = "encodedPassword123";
-
-        user = new User();
-        user.setId("id");
-        user.setEmail("test@example.com");
-        user.setPassword(encodedPassword);
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setUsername("userName!@!!");
-
-        userResponse = new UserResponse(
-                "test@example.com",
-                encodedPassword,
-                "John",
-                "Doe",
-                "userName!@!!"
-        );
+        user = mock(User.class);
+        userResponse = mock(UserResponse.class);
     }
 
     @AfterEach

@@ -2,7 +2,6 @@ package com.grits.habittracker.service.habit;
 
 import com.grits.habittracker.dao.StreakDao;
 import com.grits.habittracker.dao.habit.HabitDao;
-import com.grits.habittracker.entity.User;
 import com.grits.habittracker.entity.habit.Habit;
 import com.grits.habittracker.exception.HabitNotFoundException;
 import com.grits.habittracker.mapper.HabitMapper;
@@ -10,7 +9,6 @@ import com.grits.habittracker.model.request.CreateHabitRequest;
 import com.grits.habittracker.model.request.UpdateHabitRequest;
 import com.grits.habittracker.model.response.HabitResponse;
 import com.grits.habittracker.model.type.CategoryType;
-import com.grits.habittracker.model.type.FrequencyType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +23,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -54,41 +53,10 @@ class HabitServiceTest {
 
     @BeforeEach
     void setUp() {
-        habit = new Habit();
-        habit.setId("id123");
-        habit.setVersion(0L);
-        habit.setName("name");
-        habit.setDescription("description");
-        habit.setCategory(CategoryType.OTHER);
-        habit.setCreatedAt(LocalDate.now());
-        habit.setStartDate(LocalDate.now());
-        habit.setUser(new User());
-
-        habitResponse = new HabitResponse(
-                "id123",
-                0L,
-                "name",
-                LocalDate.now(),
-                LocalDate.now(),
-                "description",
-                CategoryType.OTHER
-        );
-
-        createHabitRequest = new CreateHabitRequest(
-                "name",
-                "description",
-                LocalDate.now(),
-                FrequencyType.DAILY,
-                CategoryType.OTHER
-        );
-
-        updateHabitRequest = new UpdateHabitRequest(
-               "name1",
-               "description1",
-               LocalDate.now(),
-               FrequencyType.DAILY,
-               CategoryType.OTHER
-        );
+        habit = mock(Habit.class);
+        habitResponse = mock(HabitResponse.class);
+        createHabitRequest = mock(CreateHabitRequest.class);
+        updateHabitRequest = mock(UpdateHabitRequest.class);
     }
 
     @AfterEach

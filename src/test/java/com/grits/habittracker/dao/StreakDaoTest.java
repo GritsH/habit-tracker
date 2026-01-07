@@ -75,6 +75,7 @@ class StreakDaoTest {
         when(streakRepository.findByHabitId("habit_id")).thenReturn(Optional.of(streak));
 
         streakDao.updateStreak("habit_id", FrequencyType.WEEKLY);
+
         assertThat(streak.getFrequency()).isEqualTo(FrequencyType.WEEKLY);
 
         verify(streakRepository).save(streak);

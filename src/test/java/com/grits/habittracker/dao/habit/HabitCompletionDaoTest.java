@@ -15,11 +15,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -40,9 +40,7 @@ class HabitCompletionDaoTest {
 
     @BeforeEach
     void setUp() {
-        habitCompletion = new HabitCompletion();
-        habitCompletion.setHabitId("id");
-        habitCompletion.setLoggedAt(LocalDate.now());
+        habitCompletion = mock(HabitCompletion.class);
     }
 
     @AfterEach
