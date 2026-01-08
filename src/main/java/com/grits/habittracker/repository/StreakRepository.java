@@ -24,9 +24,9 @@ public interface StreakRepository extends JpaRepository<Streak, String> {
 
     @Modifying
     @Query(value = """
-            UPDATE habittracker.streak s 
+            UPDATE streak s 
             SET s.current_streak_days = 0
-            WHERE DATE(s.reset_at) < DATE(NOW())
+            WHERE s.reset_at < CURRENT_DATE
             AND s.current_streak_days > 0
             LIMIT :batchSize
             """, nativeQuery = true)

@@ -10,6 +10,7 @@ import com.grits.habittracker.model.request.UpdateHabitRequest;
 import com.grits.habittracker.model.response.HabitResponse;
 import com.grits.habittracker.model.type.CategoryType;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -38,20 +40,24 @@ class HabitServiceTest {
     @Mock
     private HabitMapper habitMapper;
 
-    @Mock
-    private UpdateHabitRequest updateHabitRequest;
-
-    @Mock
-    private CreateHabitRequest createHabitRequest;
-
-    @Mock
-    private HabitResponse habitResponse;
-
-    @Mock
-    private Habit habit;
-
     @InjectMocks
     private HabitService habitService;
+
+    private UpdateHabitRequest updateHabitRequest;
+
+    private CreateHabitRequest createHabitRequest;
+
+    private HabitResponse habitResponse;
+
+    private Habit habit;
+
+    @BeforeEach
+    void setUp() {
+        habit = mock(Habit.class);
+        habitResponse = mock(HabitResponse.class);
+        createHabitRequest = mock(CreateHabitRequest.class);
+        updateHabitRequest = mock(UpdateHabitRequest.class);
+    }
 
     @AfterEach
     public void after() {
