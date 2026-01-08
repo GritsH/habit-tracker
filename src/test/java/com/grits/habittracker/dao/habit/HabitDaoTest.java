@@ -2,7 +2,6 @@ package com.grits.habittracker.dao.habit;
 
 import com.grits.habittracker.entity.User;
 import com.grits.habittracker.entity.habit.Habit;
-import com.grits.habittracker.model.type.CategoryType;
 import com.grits.habittracker.repository.StreakRepository;
 import com.grits.habittracker.repository.UserRepository;
 import com.grits.habittracker.repository.habit.HabitCompletionRepository;
@@ -16,10 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -47,17 +46,8 @@ class HabitDaoTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setId("id001");
-        user.setUsername("username");
-
-        habit = new Habit();
-        habit.setId("id123");
-        habit.setName("Exercise");
-        habit.setDescription("Daily exercise");
-        habit.setCategory(CategoryType.OTHER);
-        habit.setStartDate(LocalDate.now());
-        habit.setUser(user);
+        user = mock(User.class);
+        habit = mock(Habit.class);
     }
 
     @AfterEach

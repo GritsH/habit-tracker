@@ -11,7 +11,5 @@ public interface HabitCompletionRepository extends JpaRepository<HabitCompletion
 
     List<HabitCompletion> findAllByHabitId(String habitId);
 
-    boolean existsByCompletionLog(String logId);
-
     void deleteAllByHabitId(String habitId);
 }
