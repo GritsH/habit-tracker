@@ -79,5 +79,6 @@ class HabitCompletionServiceTest {
         List<HabitCompletionResponse> responses = habitCompletionService.getHabitLogHistory("habit_id", "user_id");
 
         assertThat(responses).isNotNull().hasSize(1);
+        assertThat(responses).contains(habitCompletionResponse);
     }
 }

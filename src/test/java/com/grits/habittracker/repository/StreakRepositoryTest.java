@@ -76,7 +76,6 @@ class StreakRepositoryTest {
         streakRepository.delete(testStreak);
         habitRepository.delete(testHabit);
         userRepository.delete(testUser);
-
     }
 
     @Test

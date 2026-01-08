@@ -159,6 +159,5 @@ class StreakDaoTest {
 
         assertThatThrownBy(() -> streakDao.getStreak("habit_id", "user_id"))
                 .isInstanceOf(StreakNotFoundException.class);
-
     }
 }
