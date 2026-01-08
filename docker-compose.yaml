@@ -3,7 +3,7 @@ services:
     image: mysql:8.0
     container_name: habit-tracker-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: RvT2156G!p
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: habittracker
       MYSQL_ROOT_HOST: '%'
     ports:
@@ -24,7 +24,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/habittracker
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: RvT2156G!p
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     depends_on:
       mysql:
         condition: service_healthy
