@@ -6,6 +6,7 @@ import com.grits.habittracker.model.response.UserResponse;
 import com.grits.habittracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class UserController {
             summary = "Register a new user",
             description = "Create a new user"
     )
-    public ResponseEntity<Void> signup(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest signupRequest) {
         userService.signUpUser(signupRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -43,7 +44,7 @@ public class UserController {
             summary = "Authenticate user",
             description = "Log in user"
     )
-    public ResponseEntity<UserResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(userService.loginUser(loginRequest));
     }
 
