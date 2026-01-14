@@ -40,12 +40,8 @@ public class UserController {
     )
     public ResponseEntity<AuthResponse> signup(@RequestBody SignupRequest signupRequest) {
         UserResponse userResponse = userService.signUpUser(signupRequest);
-
         String token = jwtTokenProvider.generateToken(userResponse.getUsername());
-
-        AuthResponse authResponse = new AuthResponse(userResponse, token);
-
-        return ResponseEntity.ok(authResponse);
+        return ResponseEntity.ok(new AuthResponse(userResponse, token));
     }
 
     @PostMapping("/login")
@@ -55,12 +51,8 @@ public class UserController {
     )
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
         UserResponse userResponse = userService.loginUser(loginRequest);
-
         String token = jwtTokenProvider.generateToken(userResponse.getUsername());
-
-        AuthResponse authResponse = new AuthResponse(userResponse, token);
-
-        return ResponseEntity.ok(authResponse);
+        return ResponseEntity.ok(new AuthResponse(userResponse, token));
     }
 
     @PostMapping("/logout")
@@ -78,8 +70,8 @@ public class UserController {
             summary = "Get a user by id",
             description = "Returns a single user if found"
     )
-    @PreAuthorize("#username == authentication.principal")
-    public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
-        return ResponseEntity.ok(userService.getUserByUsername(username));
+    @PreAuthorize("#id == authentication.principal")
+    public ResponseEntity<UserResponse> getUserByUserId(@PathVariable String id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 }
