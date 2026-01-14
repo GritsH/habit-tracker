@@ -8,6 +8,7 @@ import com.grits.habittracker.model.response.UserResponse;
 import com.grits.habittracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +39,7 @@ public class UserController {
             summary = "Register a new user",
             description = "Create a new user"
     )
-    public ResponseEntity<AuthResponse> signup(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<AuthResponse> signup(@Valid @RequestBody SignupRequest signupRequest) {
         UserResponse userResponse = userService.signUpUser(signupRequest);
         String token = jwtTokenProvider.generateToken(userResponse.getUsername());
         return ResponseEntity.ok(new AuthResponse(userResponse, token));
@@ -49,7 +50,7 @@ public class UserController {
             summary = "Authenticate user",
             description = "Log in user"
     )
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         UserResponse userResponse = userService.loginUser(loginRequest);
         String token = jwtTokenProvider.generateToken(userResponse.getUsername());
         return ResponseEntity.ok(new AuthResponse(userResponse, token));

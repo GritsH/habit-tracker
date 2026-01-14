@@ -11,6 +11,7 @@ import com.grits.habittracker.service.habit.HabitCompletionService;
 import com.grits.habittracker.service.habit.HabitService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +60,10 @@ public class HabitController {
             summary = "Create a new habit",
             description = "Add a new habit for user"
     )
-    public ResponseEntity<HabitResponse> createNewHabit(@RequestBody CreateHabitRequest createHabitRequest, @PathVariable String userId) {
+    public ResponseEntity<HabitResponse> createNewHabit(
+            @Valid @RequestBody CreateHabitRequest createHabitRequest,
+            @PathVariable String userId
+    ) {
         return ResponseEntity.ok(habitService.createNewHabit(userId, createHabitRequest));
     }
 
@@ -78,7 +82,11 @@ public class HabitController {
             summary = "Update a habit",
             description = "Updates a specific habit"
     )
-    public ResponseEntity<HabitResponse> updateHabit(@PathVariable String userId, @PathVariable String id, @RequestBody UpdateHabitRequest updateHabitRequest) {
+    public ResponseEntity<HabitResponse> updateHabit(
+            @PathVariable String userId,
+            @PathVariable String id,
+            @Valid @RequestBody UpdateHabitRequest updateHabitRequest
+    ) {
         return ResponseEntity.ok(habitService.updateHabit(id, updateHabitRequest));
     }
 
