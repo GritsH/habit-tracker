@@ -141,22 +141,22 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("should find user by username")
-    void getUserByUsername() {
-        when(userDao.getUserByUsername("userName!@!!")).thenReturn(user);
+    @DisplayName("should find user by id")
+    void getUserById() {
+        when(userDao.getUserById("id")).thenReturn(user);
         when(userMapper.entityToDto(user)).thenReturn(userResponse);
 
-        UserResponse result = service.getUserByUsername("userName!@!!");
+        UserResponse result = service.getUserById("id");
 
         assertThat(result).isNotNull();
         assertThat(result).usingRecursiveComparison().isEqualTo(userResponse);
     }
 
     @Test
-    @DisplayName("should not find user by invalid username and throw exception")
-    void getUserByUsernameWithException() {
-        when(userDao.getUserByUsername("bad_username")).thenThrow(UserNotFoundException.class);
+    @DisplayName("should not find user by invalid id and throw exception")
+    void getUserByIdWithException() {
+        when(userDao.getUserById("bad_id")).thenThrow(UserNotFoundException.class);
 
-        assertThatThrownBy(() -> service.getUserByUsername("bad_username")).isInstanceOf(UserNotFoundException.class);
+        assertThatThrownBy(() -> service.getUserById("bad_id")).isInstanceOf(UserNotFoundException.class);
     }
 }

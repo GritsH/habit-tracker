@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -36,22 +37,8 @@ class UserDaoTest {
 
     @BeforeEach
     void setUp() {
-        String encodedPassword = "encodedPassword123";
-
-        user = new User();
-        user.setId("id");
-        user.setEmail("test@example.com");
-        user.setPassword(encodedPassword);
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setUsername("userName!@!!");
-
-        userResponse = new UserResponse(
-                "test@example.com",
-                "John",
-                "Doe",
-                "userName!@!!"
-        );
+        user = mock(User.class);
+        userResponse = mock(UserResponse.class);
     }
 
     @AfterEach
@@ -83,7 +70,7 @@ class UserDaoTest {
         User result = userDao.getUserByEmail("test@example.com");
 
         assertThat(result).usingRecursiveComparison()
-                .ignoringFields("id", "habits", "password")
+                .ignoringFields("id", "habits")
                 .isEqualTo(userResponse);
     }
 
@@ -98,25 +85,25 @@ class UserDaoTest {
     }
 
     @Test
-    @DisplayName("should find user by username")
-    void getUserByUsername() {
-        when(repository.findByUsername("userName!@!!")).thenReturn(Optional.of(user));
+    @DisplayName("should find user by id")
+    void getUserById() {
+        when(repository.findById("id")).thenReturn(Optional.of(user));
 
-        User result = userDao.getUserByUsername("userName!@!!");
+        User result = userDao.getUserById("id");
 
         assertThat(result).isNotNull();
         assertThat(result).usingRecursiveComparison()
-                .ignoringFields("id", "habits", "password")
+                .ignoringFields("id", "habits")
                 .isEqualTo(userResponse);
     }
 
     @Test
-    @DisplayName("should not find user by invalid username and throw exception")
-    void getUserByUsernameWithException() {
-        when(repository.findByUsername("bad_username")).thenReturn(Optional.empty());
+    @DisplayName("should not find user by invalid id and throw exception")
+    void getUserByIdWithException() {
+        when(repository.findById("bad_id")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userDao.getUserByUsername("bad_username"))
+        assertThatThrownBy(() -> userDao.getUserById("bad_id"))
                 .isInstanceOf(UserNotFoundException.class)
-                .hasMessage("User bad_username not found");
+                .hasMessage("User bad_id not found");
     }
 }

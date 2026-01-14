@@ -73,9 +73,9 @@ public class UserController {
     }
 
 
-    @GetMapping("/users/{username}")
+    @GetMapping("/users/{id}")
     @Operation(
-            summary = "Get a user by username",
+            summary = "Get a user by id",
             description = "Returns a single user if found"
     )
     @PreAuthorize("#username == authentication.principal")

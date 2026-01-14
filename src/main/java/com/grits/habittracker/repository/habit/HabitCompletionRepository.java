@@ -10,4 +10,6 @@ import java.util.List;
 public interface HabitCompletionRepository extends JpaRepository<HabitCompletion, String> {
 
     List<HabitCompletion> findAllByHabitId(String habitId);
+
+    void deleteAllByHabitId(String habitId);
 }

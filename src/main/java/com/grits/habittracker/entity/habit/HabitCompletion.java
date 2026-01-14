@@ -3,8 +3,6 @@ package com.grits.habittracker.entity.habit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,16 +28,12 @@ public class HabitCompletion {
     )
     private String id;
 
-    @Column(name = "created_at")
-    private LocalDate createdAt;
+    @Column(name = "logged_at")
+    private LocalDate loggedAt;
 
-    @Column(name = "completed_at")
-    private LocalDate completedAt;
+    @Column(name = "completion_log")
+    private String completionLog;
 
-    @Column(name = "is_skipped")
-    private boolean isSkipped;
-
-    @ManyToOne
-    @JoinColumn(name = "habit_id", nullable = false)
-    private Habit habit;
+    @Column(name = "habit_id")
+    private String habitId;
 }

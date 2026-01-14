@@ -1,8 +1,10 @@
 package com.grits.habittracker.exception;
 
-public class UserNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class UserNotFoundException extends GlobalServiceException {
 
     public UserNotFoundException(String user) {
-        super("User " + user + " not found");
+        super("User " + user + " not found", HttpStatus.NOT_FOUND);
     }
 }

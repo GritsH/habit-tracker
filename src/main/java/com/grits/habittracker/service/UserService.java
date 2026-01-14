@@ -49,10 +49,10 @@ public class UserService {
         return userMapper.entityToDto(user);
     }
 
-    public UserResponse getUserByUsername(String username) {
-        log.debug("Get user with username: {}", username);
+    public UserResponse getUserById(String id) {
+        log.debug("Get user with ID: {}", id);
 
-        User user = userDao.getUserByUsername(username);
+        User user = userDao.getUserById(id);
 
         return userMapper.entityToDto(user);
     }

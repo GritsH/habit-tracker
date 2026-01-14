@@ -1,10 +1,12 @@
 package com.grits.habittracker.exception;
 
-public class InvalidCredentialsException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class InvalidCredentialsException extends GlobalServiceException {
 
     private static final String MESSAGE = "Invalid credentials";
 
     public InvalidCredentialsException() {
-        super(MESSAGE);
+        super(MESSAGE, HttpStatus.UNAUTHORIZED);
     }
 }
