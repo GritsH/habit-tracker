@@ -5,6 +5,8 @@ import lombok.Value;
 @Value
 public class UserResponse {
 
+    String id;
+
     String email;
 
     String firstName;

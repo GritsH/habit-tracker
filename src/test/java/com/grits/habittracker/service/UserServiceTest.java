@@ -73,6 +73,7 @@ public class UserServiceTest {
         user.setUsername("userName!@!!");
 
         userResponse = new UserResponse(
+                "id",
                 "test@example.com",
                 "John",
                 "Doe",

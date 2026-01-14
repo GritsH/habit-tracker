@@ -41,7 +41,7 @@ public class UserController {
     )
     public ResponseEntity<AuthResponse> signup(@Valid @RequestBody SignupRequest signupRequest) {
         UserResponse userResponse = userService.signUpUser(signupRequest);
-        String token = jwtTokenProvider.generateToken(userResponse.getUsername());
+        String token = jwtTokenProvider.generateToken(userResponse.getId());
         return ResponseEntity.ok(new AuthResponse(userResponse, token));
     }
 
@@ -52,7 +52,7 @@ public class UserController {
     )
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         UserResponse userResponse = userService.loginUser(loginRequest);
-        String token = jwtTokenProvider.generateToken(userResponse.getUsername());
+        String token = jwtTokenProvider.generateToken(userResponse.getId());
         return ResponseEntity.ok(new AuthResponse(userResponse, token));
     }
 
