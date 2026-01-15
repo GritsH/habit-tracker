@@ -9,6 +9,9 @@ import com.grits.habittracker.repository.StreakRepository;
 import com.grits.habittracker.repository.habit.HabitRepository;
 import jakarta.persistence.PessimisticLockException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -30,6 +33,7 @@ public class StreakDao {
         streakRepository.save(streak);
     }
 
+    @CachePut(value = "streak", key = "#habitId")
     public void updateStreak(String habitId, FrequencyType frequency) {
         if (isNotEmpty(frequency)) {
             Streak streak = streakRepository.findByHabitId(habitId).orElseThrow(() -> new StreakNotFoundException(habitId));
@@ -38,7 +42,8 @@ public class StreakDao {
         }
     }
 
-    public void incrementStreak(String habitId) {
+    @CachePut(value = "streak", key = "#habitId")
+    public Streak incrementStreak(String habitId) {
         Streak streak;
         try {
             streak = streakRepository.findByHabitIdWithLock(habitId).orElseThrow(() -> new StreakNotFoundException(habitId));
@@ -52,9 +57,10 @@ public class StreakDao {
         }
         streak.setResetAt(streak.getFrequency().calculateResetAt());
         streak.setLongestStreak(Math.max(streak.getCurrentStreak(), streak.getLongestStreak()));
-        streakRepository.save(streak);
+        return streakRepository.save(streak);
     }
 
+    @CacheEvict(value = "streak", allEntries = true)
     public void resetAllMissedStreaks() {
         int batchUpdated;
         do {
@@ -62,6 +68,7 @@ public class StreakDao {
         } while (batchUpdated > 0);
     }
 
+    @Cacheable(value = "streak", key = "#habitId")
     public Streak getStreak(String habitId, String userId) {
         checkHabitOwnership(habitId, userId);
         return streakRepository.findByHabitId(habitId).orElseThrow(() -> new StreakNotFoundException(habitId));

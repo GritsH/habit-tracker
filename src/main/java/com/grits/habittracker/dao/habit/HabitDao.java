@@ -10,6 +10,9 @@ import com.grits.habittracker.repository.UserRepository;
 import com.grits.habittracker.repository.habit.HabitCompletionRepository;
 import com.grits.habittracker.repository.habit.HabitRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +30,7 @@ public class HabitDao {
 
     private final UserRepository userRepository;
 
+    @CacheEvict(value = "userHabits", key = "#userId")
     public Habit saveHabit(Habit habit, String userId) {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(userId);
@@ -36,6 +40,7 @@ public class HabitDao {
         return habitRepository.save(habit);
     }
 
+    @CacheEvict(value = {"habit", "userHabits"}, key = "#habitId")
     public void deleteHabit(String habitId, String userId) {
         checkHabitOwnership(habitId, userId);
         habitCompletionRepository.deleteAllByHabitId(habitId);
@@ -43,10 +48,13 @@ public class HabitDao {
         habitRepository.deleteById(habitId);
     }
 
+    @Cacheable(value = "habit", key = "#id", unless = "#result == null")
     public Habit getHabitById(String id) {
         return habitRepository.findById(id).orElseThrow(() -> new HabitNotFoundException(id));
     }
 
+    @CachePut(value = "habit", key = "#updated.id")
+    @CacheEvict(value = "userHabits", allEntries = true)
     public Habit updateHabit(Habit updated) {
         try {
             return habitRepository.save(updated);
@@ -55,6 +63,7 @@ public class HabitDao {
         }
     }
 
+    @Cacheable(value = "userHabits", key = "#userId")
     public List<Habit> getUserHabits(String userId) {
         return habitRepository.findAllByUserId(userId);
     }
