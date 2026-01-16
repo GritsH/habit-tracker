@@ -25,7 +25,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "user"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Habit {
     @Id

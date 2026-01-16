@@ -33,7 +33,7 @@ public class StreakDao {
         streakRepository.save(streak);
     }
 
-    @CachePut(value = "streak", key = "#habitId")
+    @CacheEvict(value = "streak", key = "#habitId")
     public void updateStreak(String habitId, FrequencyType frequency) {
         if (isNotEmpty(frequency)) {
             Streak streak = streakRepository.findByHabitId(habitId).orElseThrow(() -> new StreakNotFoundException(habitId));

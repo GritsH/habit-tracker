@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +41,12 @@ public class HabitDao {
         return habitRepository.save(habit);
     }
 
-    @CacheEvict(value = {"habit", "userHabits"}, key = "#habitId")
+    @Caching(evict = {
+            @CacheEvict(value = "habitCompletions", key = "#habitId"),
+            @CacheEvict(value = "streak", key = "#habitId"),
+            @CacheEvict(value = "userHabits", key = "#userId"),
+            @CacheEvict(value = "habit", key = "#habitId")
+    })
     public void deleteHabit(String habitId, String userId) {
         checkHabitOwnership(habitId, userId);
         habitCompletionRepository.deleteAllByHabitId(habitId);
