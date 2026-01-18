@@ -54,13 +54,13 @@ public class HabitDao {
         habitRepository.deleteById(habitId);
     }
 
-    @Cacheable(value = "habit", key = "#id", unless = "#result == null")
+    @Cacheable(value = "habit", key = "#id")
     public Habit getHabitById(String id) {
         return habitRepository.findById(id).orElseThrow(() -> new HabitNotFoundException(id));
     }
 
     @CachePut(value = "habit", key = "#updated.id")
-    @CacheEvict(value = "userHabits", allEntries = true)
+    @CacheEvict(value = "userHabits", key = "#updated.user.id")
     public Habit updateHabit(Habit updated) {
         try {
             return habitRepository.save(updated);
