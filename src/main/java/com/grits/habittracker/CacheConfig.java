@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -16,7 +17,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -41,32 +42,43 @@ public class CacheConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
+    public GenericJackson2JsonRedisSerializer redisJsonSerializer() {
+        return createJsonRedisSerializer();
+    }
+
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(
+            RedisConnectionFactory connectionFactory,
+            GenericJackson2JsonRedisSerializer redisJsonSerializer
+    ) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory());
+        template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
 
-        Jackson2JsonRedisSerializer<Object> serializer = createJsonRedisSerializer();
-        template.setValueSerializer(serializer);
+        template.setValueSerializer(redisJsonSerializer);
         template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(serializer);
+        template.setHashValueSerializer(redisJsonSerializer);
 
         template.afterPropertiesSet();
         return template;
     }
 
-    private Jackson2JsonRedisSerializer<Object> createJsonRedisSerializer() {
+    private GenericJackson2JsonRedisSerializer createJsonRedisSerializer() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
         mapper.activateDefaultTyping(
-                mapper.getPolymorphicTypeValidator(),
+                BasicPolymorphicTypeValidator.builder()
+                        .allowIfSubType("com.grits.habittracker.")
+                        .allowIfSubType("java.util.")
+                        .build(),
                 ObjectMapper.DefaultTyping.NON_FINAL,
                 JsonTypeInfo.As.PROPERTY
         );
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        return new Jackson2JsonRedisSerializer<>(mapper, Object.class);
+        return new GenericJackson2JsonRedisSerializer(mapper);
     }
 
     @Bean
