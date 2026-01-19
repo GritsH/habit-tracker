@@ -1,5 +1,6 @@
 package com.grits.habittracker.entity.habit;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class HabitCompletion {
     @Id
     @UuidGenerator(style = UuidGenerator.Style.TIME)
