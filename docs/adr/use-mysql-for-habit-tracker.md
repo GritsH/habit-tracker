@@ -4,7 +4,7 @@
 2025.12.02
 
 ## Status
-Proposed
+Accepted
 
 ## Context
 We are building a habit tracker application that requires persistent storage for user data, habits, completions, and streak calculations.

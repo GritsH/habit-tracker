@@ -1,5 +1,6 @@
 package com.grits.habittracker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.grits.habittracker.model.type.FrequencyType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Streak {
     @Id
     @UuidGenerator(style = UuidGenerator.Style.TIME)
