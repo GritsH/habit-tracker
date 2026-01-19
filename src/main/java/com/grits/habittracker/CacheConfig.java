@@ -33,11 +33,19 @@ public class CacheConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
+    @Value("${spring.data.redis.password}")
+    private String redisPassword;
+
+    @Value("${spring.data.redis.username}")
+    private String redisUser;
+
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(redisHost);
         config.setPort(redisPort);
+        config.setUsername(redisUser);
+        config.setPassword(redisPassword);
         return new LettuceConnectionFactory(config);
     }
 
