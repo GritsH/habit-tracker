@@ -7,13 +7,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Date;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class JwtTokenProvider {
@@ -26,7 +26,14 @@ public class JwtTokenProvider {
 
     private SecretKey secretKey;
 
-    private final ConcurrentHashMap<String, Long> tokenBlacklist = new ConcurrentHashMap<>();
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    @Value("${jwt.blacklist.prefix}")
+    private String blacklistPrefix;
+
+    public JwtTokenProvider(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     @PostConstruct
     public void init() {
@@ -63,26 +70,22 @@ public class JwtTokenProvider {
     }
 
     public void invalidateToken(String token) {
-        Date expiryDate = parseToken(token).getPayload().getExpiration();
-        tokenBlacklist.put(token, expiryDate.getTime());
+        try {
+            Jws<Claims> claims = parseToken(token);
+            Date expiryDate = claims.getPayload().getExpiration();
+            long ttl = expiryDate.getTime() - System.currentTimeMillis();
+            if (ttl > 0) {
+                String key = blacklistPrefix + token;
+                redisTemplate.opsForValue().set(key, "blacklisted", Duration.ofMillis(ttl));
+            }
+        } catch (JwtException e) {
+            System.err.println("Error invalidating token: " + e.getMessage());
+        }
     }
 
     private boolean isTokenBlacklisted(String token) {
-        Long expiryTime = tokenBlacklist.get(token);
-        if (expiryTime == null) {
-            return false;
-        }
-        if (expiryTime < System.currentTimeMillis()) {
-            tokenBlacklist.remove(token);
-            return false;
-        }
-        return true;
-    }
-
-    @Scheduled(fixedRateString = "${jwt.cleanup.rate}")
-    public void cleanupExpiredBlacklistTokens() {
-        long currentTime = System.currentTimeMillis();
-        tokenBlacklist.entrySet().removeIf(entry -> entry.getValue() < currentTime);
+        String key = blacklistPrefix + token;
+        return redisTemplate.hasKey(key);
     }
 
     private Jws<Claims> parseToken(String token) {
