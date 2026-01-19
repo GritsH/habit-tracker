@@ -4,7 +4,7 @@
 2026.01.16
 
 ## Status
-Proposed
+Accepted
 
 ## Context
 The application requires a Redis client for caching operations to improve performance and reduce database load. 
