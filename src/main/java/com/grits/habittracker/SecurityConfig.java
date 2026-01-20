@@ -1,7 +1,7 @@
 package com.grits.habittracker;
 
 import com.grits.habittracker.jwt.JwtAuthenticationFilter;
-import com.grits.habittracker.jwt.JwtTokenProvider;
+import com.grits.habittracker.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthService authService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -27,7 +27,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider);
+        return new JwtAuthenticationFilter(authService);
     }
 
     @Bean

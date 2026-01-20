@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/users/{userId}/habits")
 @Tag(name = "Habit API")
-@PreAuthorize("isAuthenticated()")
+@PreAuthorize("#userId == authentication.principal")
 public class HabitController {
 
     private final HabitService habitService;

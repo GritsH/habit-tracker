@@ -1,11 +1,13 @@
 package com.grits.habittracker.jwt;
 
+import com.grits.habittracker.exception.InvalidCredentialsException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -14,8 +16,10 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
@@ -31,10 +35,6 @@ public class JwtTokenProvider {
     @Value("${jwt.blacklist.prefix}")
     private String blacklistPrefix;
 
-    public JwtTokenProvider(RedisTemplate<String, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
-
     @PostConstruct
     public void init() {
         this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
@@ -43,9 +43,11 @@ public class JwtTokenProvider {
     public String generateToken(String id) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
+        String jti = UUID.randomUUID().toString();
 
         return Jwts.builder()
                 .subject(id)
+                .id(jti)
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(secretKey, Jwts.SIG.HS512)
@@ -57,25 +59,35 @@ public class JwtTokenProvider {
         return claimsJws.getPayload().getSubject();
     }
 
+    public String getJtiFromToken(String token) {
+        Jws<Claims> claimsJws = parseToken(token);
+        return claimsJws.getPayload().getId();
+    }
+
+    public Date getExpirationFromToken(String token) {
+        Jws<Claims> claimsJws = parseToken(token);
+        return claimsJws.getPayload().getExpiration();
+    }
+
     public boolean validateToken(String token) {
         try {
             if (isTokenBlacklisted(token)) {
-                return false;
+                throw new InvalidCredentialsException("Token is blacklisted");
             }
             parseToken(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            return false;
+            throw new InvalidCredentialsException("Expired or invalid JWT token");
         }
     }
 
     public void invalidateToken(String token) {
         try {
-            Jws<Claims> claims = parseToken(token);
-            Date expiryDate = claims.getPayload().getExpiration();
+            String jti = getJtiFromToken(token);
+            Date expiryDate = getExpirationFromToken(token);
             long ttl = expiryDate.getTime() - System.currentTimeMillis();
             if (ttl > 0) {
-                String key = blacklistPrefix + token;
+                String key = blacklistPrefix + jti;
                 redisTemplate.opsForValue().set(key, "blacklisted", Duration.ofMillis(ttl));
             }
         } catch (JwtException e) {
@@ -84,7 +96,8 @@ public class JwtTokenProvider {
     }
 
     private boolean isTokenBlacklisted(String token) {
-        String key = blacklistPrefix + token;
+        String jti = getJtiFromToken(token);
+        String key = blacklistPrefix + jti;
         return redisTemplate.hasKey(key);
     }
 

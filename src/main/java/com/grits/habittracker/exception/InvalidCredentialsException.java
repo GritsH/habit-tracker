@@ -9,4 +9,8 @@ public class InvalidCredentialsException extends GlobalServiceException {
     public InvalidCredentialsException() {
         super(MESSAGE, HttpStatus.UNAUTHORIZED);
     }
+
+    public InvalidCredentialsException(String message) {
+        super(message, HttpStatus.UNAUTHORIZED);
+    }
 }
