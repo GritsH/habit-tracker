@@ -5,9 +5,9 @@ import lombok.Value;
 @Value
 public class UserResponse {
 
-    String email;
+    String id;
 
-    String password;
+    String email;
 
     String firstName;
 

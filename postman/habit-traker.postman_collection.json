@@ -1,0 +1,502 @@
+{
+  "info": {
+    "_postman_id": "d64122a0-0cac-48c1-8813-d0427761b58c",
+    "name": "habit-traker",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "27983529"
+  },
+  "item": [
+    {
+      "name": "signUp",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"email@gmail.com\",\r\n    \"password\": \"123password\",\r\n    \"firstName\": \"name\",\r\n    \"lastName\": \"surname\",\r\n    \"username\": \"abobus\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/signup",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "signup"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData = pm.response.json();\r",
+              "pm.collectionVariables.set(\"userId\", jsonData.user.id);\r",
+              "pm.collectionVariables.set(\"authToken\", jsonData.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"email@gmail.com\",\r\n    \"password\": \"123password\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "logout",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/logout",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getUserById",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"email@gmail.com\",\r\n    \"password\": \"123password\"\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/users/{{userId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "{{userId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getAllHabits",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"email@gmail.com\",\r\n    \"password\": \"123password\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/users/{{userId}}/habits",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "{{userId}}",
+            "habits"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "createHabit",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData = pm.response.json();\r",
+              "pm.collectionVariables.set(\"habitId\", jsonData.id);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"testing33\",\r\n    \"description\": \"Super duper decription\",\r\n    \"startDate\": \"2026-11-17\",\r\n    \"frequency\": \"DAILY\",\r\n    \"category\": \"MENTAL_HEALTH\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/users/{{userId}}/habits",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "{{userId}}",
+            "habits"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "deleteHabit",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"New habit\",\r\n    \"description\": \"That's a super duper new Habit. I wanna do bunch of things\",\r\n    \"startDate\": \"2025-12-19\",\r\n    \"frequency\": \"Daily\",\r\n    \"habitCategory\": \"Mental health\"\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/users/{{userId}}/habits/{{habitId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "{{userId}}",
+            "habits",
+            "{{habitId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "updateHabit",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"New habit\",\r\n    \"description\": \"That's a super duper new Habit. I wanna do bunch of things\",\r\n    \"startDate\": \"2025-12-19\",\r\n    \"frequency\": \"Daily\",\r\n    \"habitCategory\": \"Mental health\"\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/users/{{userId}}/habits/{{habitId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "{{userId}}",
+            "habits",
+            "{{habitId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "logCompletion",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"email@gmail.com\",\r\n    \"password\": \"123password\",\r\n    \"firstName\": \"name\",\r\n    \"lastName\": \"surname\",\r\n    \"username\": \"UserName!@\"\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/users/{{userId}}/habits/{{habitId}}/completions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "{{userId}}",
+            "habits",
+            "{{habitId}}",
+            "completions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getHabitCompletions",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/users/{{userId}}/habits/{{habitId}}/completions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "{{userId}}",
+            "habits",
+            "{{habitId}}",
+            "completions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getHabitStreak",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/users/{{userId}}/habits/{{habitId}}/streak",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "{{userId}}",
+            "habits",
+            "{{habitId}}",
+            "streak"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "health check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/actuator/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "actuator",
+            "health"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "userId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "habitId",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

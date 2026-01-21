@@ -73,8 +73,8 @@ public class UserServiceTest {
         user.setUsername("userName!@!!");
 
         userResponse = new UserResponse(
+                "id",
                 "test@example.com",
-                encodedPassword,
                 "John",
                 "Doe",
                 "userName!@!!"
@@ -91,8 +91,11 @@ public class UserServiceTest {
     void signUp() {
         when(passwordEncoder.encode("password123")).thenReturn(encodedPassword);
         when(userMapper.dtoToEntity(signupRequest)).thenReturn(user);
+        when(userMapper.entityToDto(user)).thenReturn(userResponse);
 
-        service.signUpUser(signupRequest);
+        UserResponse result = service.signUpUser(signupRequest);
+
+        assertThat(result).usingRecursiveComparison().isEqualTo(userResponse);
 
         verify(userDao).saveUser(user);
     }

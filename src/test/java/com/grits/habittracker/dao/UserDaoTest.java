@@ -70,7 +70,7 @@ class UserDaoTest {
         User result = userDao.getUserByEmail("test@example.com");
 
         assertThat(result).usingRecursiveComparison()
-                .ignoringFields("id", "habits")
+                .ignoringFields("id", "habits", "password")
                 .isEqualTo(userResponse);
     }
 
@@ -93,7 +93,7 @@ class UserDaoTest {
 
         assertThat(result).isNotNull();
         assertThat(result).usingRecursiveComparison()
-                .ignoringFields("id", "habits")
+                .ignoringFields("id", "habits", "password")
                 .isEqualTo(userResponse);
     }
 

@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,6 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/users/{userId}/habits")
 @Tag(name = "Habit API")
+@PreAuthorize("#userId == authentication.principal")
 public class HabitController {
 
     private final HabitService habitService;
