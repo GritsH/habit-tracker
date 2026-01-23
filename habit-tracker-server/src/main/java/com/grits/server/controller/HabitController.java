@@ -10,12 +10,9 @@ import com.grits.api.model.response.StreakResponse;
 import com.grits.server.service.StreakService;
 import com.grits.server.service.habit.HabitCompletionService;
 import com.grits.server.service.habit.HabitService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -42,10 +39,7 @@ public class HabitController implements HabitApi {
     }
 
     @Override
-    public ResponseEntity<HabitResponse> createNewHabit(
-            @Valid @RequestBody CreateHabitRequest createHabitRequest,
-            @PathVariable String userId
-    ) {
+    public ResponseEntity<HabitResponse> createNewHabit(CreateHabitRequest createHabitRequest, String userId) {
         return ResponseEntity.ok(habitService.createNewHabit(userId, createHabitRequest));
     }
 
@@ -56,11 +50,7 @@ public class HabitController implements HabitApi {
     }
 
     @Override
-    public ResponseEntity<HabitResponse> updateHabit(
-            @PathVariable String userId,
-            @PathVariable String id,
-            @Valid @RequestBody UpdateHabitRequest updateHabitRequest
-    ) {
+    public ResponseEntity<HabitResponse> updateHabit(String userId, String id, UpdateHabitRequest updateHabitRequest) {
         return ResponseEntity.ok(habitService.updateHabit(id, updateHabitRequest));
     }
 
@@ -75,7 +65,7 @@ public class HabitController implements HabitApi {
     }
 
     @Override
-    public ResponseEntity<StreakResponse> getHabitStreakHistory( String userId, String id) {
+    public ResponseEntity<StreakResponse> getHabitStreakHistory(String userId, String id) {
         return ResponseEntity.ok(streakService.getStreak(id, userId));
     }
 }
