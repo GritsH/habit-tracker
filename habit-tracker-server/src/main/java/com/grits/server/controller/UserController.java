@@ -1,6 +1,6 @@
 package com.grits.server.controller;
 
-import com.grits.api.controller.UserOperations;
+import com.grits.api.controller.UserApi;
 import com.grits.api.model.request.LoginRequest;
 import com.grits.api.model.request.SignupRequest;
 import com.grits.api.model.response.AuthResponse;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class UserController implements UserOperations {
+public class UserController implements UserApi {
 
     private final AuthService authService;
 

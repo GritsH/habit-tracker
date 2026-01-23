@@ -1,7 +1,7 @@
 package com.grits.server.controller;
 
 
-import com.grits.api.controller.HabitOperations;
+import com.grits.api.controller.HabitApi;
 import com.grits.api.model.request.CreateHabitRequest;
 import com.grits.api.model.request.UpdateHabitRequest;
 import com.grits.api.model.response.HabitCompletionResponse;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class HabitController implements HabitOperations {
+public class HabitController implements HabitApi {
 
     private final HabitService habitService;
 

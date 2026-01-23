@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/v1")
 @Tag(name = "User API")
-public interface UserOperations {
+public interface UserApi {
 
     @PostMapping("/signup")
     @Operation(

@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping("/v1/users/{userId}/habits")
 @Tag(name = "Habit API")
 @PreAuthorize("#userId == authentication.principal")
-public interface HabitOperations {
+public interface HabitApi {
 
     @GetMapping
     @Operation(
