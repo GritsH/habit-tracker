@@ -1,7 +1,7 @@
 package com.grits.server;
 
-import com.grits.api.service.auth.AuthService;
 import com.grits.server.jwt.JwtAuthenticationFilter;
+import com.grits.server.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

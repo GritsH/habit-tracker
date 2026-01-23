@@ -41,7 +41,7 @@ class HabitServiceTest {
     private HabitMapper habitMapper;
 
     @InjectMocks
-    private HabitServiceImpl habitService;
+    private HabitService habitService;
 
     private UpdateHabitRequest updateHabitRequest;
 

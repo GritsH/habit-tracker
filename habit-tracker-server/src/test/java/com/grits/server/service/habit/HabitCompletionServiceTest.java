@@ -35,7 +35,7 @@ class HabitCompletionServiceTest {
     private HabitCompletionMapper habitCompletionMapper;
 
     @InjectMocks
-    private HabitCompletionServiceImpl habitCompletionService;
+    private HabitCompletionService habitCompletionService;
 
     private HabitCompletionResponse habitCompletionResponse;
 

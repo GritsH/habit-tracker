@@ -78,7 +78,7 @@ public class CacheConfig {
 
         mapper.activateDefaultTyping(
                 BasicPolymorphicTypeValidator.builder()
-                        .allowIfSubType("com.grits.habittracker.")
+                        .allowIfSubType("com.grits.server.")
                         .allowIfSubType("java.util.")
                         .build(),
                 ObjectMapper.DefaultTyping.NON_FINAL,

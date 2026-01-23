@@ -39,7 +39,7 @@ public class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private UserServiceImpl service;
+    private UserService service;
 
     private SignupRequest signupRequest;
     private LoginRequest loginRequest;

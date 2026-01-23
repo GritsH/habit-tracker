@@ -1,13 +1,12 @@
 package com.grits.server.service.habit;
 
-import com.grits.api.service.habit.HabitService;
+import com.grits.api.model.request.CreateHabitRequest;
+import com.grits.api.model.request.UpdateHabitRequest;
+import com.grits.api.model.response.HabitResponse;
 import com.grits.server.dao.StreakDao;
 import com.grits.server.dao.habit.HabitDao;
 import com.grits.server.entity.habit.Habit;
 import com.grits.server.mapper.HabitMapper;
-import com.grits.api.model.request.CreateHabitRequest;
-import com.grits.api.model.request.UpdateHabitRequest;
-import com.grits.api.model.response.HabitResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(isolation = Isolation.REPEATABLE_READ)
-public class HabitServiceImpl implements HabitService {
+public class HabitService {
 
     private final HabitDao habitDao;
 
@@ -28,7 +27,6 @@ public class HabitServiceImpl implements HabitService {
 
     private final HabitMapper habitMapper;
 
-    @Override
     public HabitResponse createNewHabit(String userId, CreateHabitRequest createHabitRequest) {
         log.info("Saving new habit for user {}", userId);
         Habit habit = habitMapper.toHabit(createHabitRequest);
@@ -38,7 +36,6 @@ public class HabitServiceImpl implements HabitService {
         return response;
     }
 
-    @Override
     @Transactional(readOnly = true)
     public List<HabitResponse> getAllHabits(String userId) {
         log.info("Retrieving habits for user {}", userId);
@@ -47,14 +44,12 @@ public class HabitServiceImpl implements HabitService {
         return habitMapper.toDtoList(userHabits);
     }
 
-    @Override
     public void deleteHabit(String habitId, String userId) {
         log.info("Delete attempt for a habit with id: {}", habitId);
         habitDao.deleteHabit(habitId, userId);
         log.info("Habit with id {} deleted successfully", habitId);
     }
 
-    @Override
     public HabitResponse updateHabit(String habitId, UpdateHabitRequest updateHabitRequest) {
         log.info("Updating habit with id: {}", habitId);
         Habit habit = habitDao.getHabitById(habitId);

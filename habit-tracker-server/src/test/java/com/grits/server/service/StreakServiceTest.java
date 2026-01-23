@@ -27,7 +27,7 @@ class StreakServiceTest {
     private StreakMapper streakMapper;
 
     @InjectMocks
-    private StreakServiceImpl streakService;
+    private StreakService streakService;
 
     @AfterEach
     void tearDown() {

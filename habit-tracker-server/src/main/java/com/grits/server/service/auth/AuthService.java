@@ -1,6 +1,5 @@
 package com.grits.server.service.auth;
 
-import com.grits.api.service.auth.AuthService;
 import com.grits.server.jwt.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,16 +12,14 @@ import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Override
     public String generateToken(String userId) {
         return jwtTokenProvider.generateToken(userId);
     }
 
-    @Override
     public String extractAndValidateToken(HttpServletRequest request) {
         String token = extractToken(request);
         if (token != null && jwtTokenProvider.validateToken(token)) {
@@ -31,7 +28,6 @@ public class AuthServiceImpl implements AuthService {
         return null;
     }
 
-    @Override
     public void invalidateToken(HttpServletRequest request) {
         String token = extractToken(request);
         if (token != null) {
@@ -40,7 +36,6 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.clearContext();
     }
 
-    @Override
     public Authentication createAuthentication(String token) {
         String userId = jwtTokenProvider.getUserIdFromToken(token);
         return new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());

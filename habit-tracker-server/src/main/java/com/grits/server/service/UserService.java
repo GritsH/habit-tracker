@@ -1,13 +1,12 @@
 package com.grits.server.service;
 
-import com.grits.api.service.UserService;
-import com.grits.server.exception.InvalidCredentialsException;
-import com.grits.server.dao.UserDao;
-import com.grits.server.entity.User;
-import com.grits.server.mapper.UserMapper;
 import com.grits.api.model.request.LoginRequest;
 import com.grits.api.model.request.SignupRequest;
 import com.grits.api.model.response.UserResponse;
+import com.grits.server.dao.UserDao;
+import com.grits.server.entity.User;
+import com.grits.server.exception.InvalidCredentialsException;
+import com.grits.server.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
@@ -24,7 +23,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
 
-    @Override
     public UserResponse signUpUser(SignupRequest signupRequest) {
         log.info("Signing up new user with email: {}", signupRequest.getEmail());
 
@@ -38,7 +36,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.entityToDto(user);
     }
 
-    @Override
     public UserResponse loginUser(LoginRequest loginRequest) {
         log.info("Login attempt for email: {}", loginRequest.getEmail());
 
@@ -52,7 +49,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.entityToDto(user);
     }
 
-    @Override
     public UserResponse getUserById(String id) {
         log.debug("Get user with ID: {}", id);
 

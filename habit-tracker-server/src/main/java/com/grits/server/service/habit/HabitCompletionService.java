@@ -1,11 +1,10 @@
 package com.grits.server.service.habit;
 
-import com.grits.api.service.habit.HabitCompletionService;
+import com.grits.api.model.response.HabitCompletionResponse;
 import com.grits.server.dao.StreakDao;
 import com.grits.server.dao.habit.HabitCompletionDao;
 import com.grits.server.entity.habit.HabitCompletion;
 import com.grits.server.mapper.HabitCompletionMapper;
-import com.grits.api.model.response.HabitCompletionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(isolation = Isolation.REPEATABLE_READ)
-public class HabitCompletionServiceImpl implements HabitCompletionService {
+public class HabitCompletionService {
 
     private final HabitCompletionDao completionDao;
 
@@ -26,7 +25,6 @@ public class HabitCompletionServiceImpl implements HabitCompletionService {
 
     private final HabitCompletionMapper completionMapper;
 
-    @Override
     public HabitCompletionResponse logCompletion(String habitId, String userId) {
         log.info("Logging completion for habit: {}", habitId);
         HabitCompletion habitCompletion = completionMapper.toEntity(habitId);
@@ -38,7 +36,6 @@ public class HabitCompletionServiceImpl implements HabitCompletionService {
         return response;
     }
 
-    @Override
     @Transactional(readOnly = true)
     public List<HabitCompletionResponse> getHabitLogHistory(String habitId, String userId) {
         log.info("Retrieving completions log for habit: {}", habitId);

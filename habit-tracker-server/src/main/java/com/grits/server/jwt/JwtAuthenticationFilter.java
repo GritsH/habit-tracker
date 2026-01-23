@@ -1,6 +1,6 @@
 package com.grits.server.jwt;
 
-import com.grits.api.service.auth.AuthService;
+import com.grits.server.service.auth.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
