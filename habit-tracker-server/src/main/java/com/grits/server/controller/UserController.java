@@ -29,14 +29,14 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<AuthResponse> signup(@Valid @RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<AuthResponse> signup(SignupRequest signupRequest) {
         UserResponse userResponse = userService.signUpUser(signupRequest);
         String token = authService.generateToken(userResponse.getId());
         return ResponseEntity.ok(new AuthResponse(userResponse, token));
     }
 
     @Override
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login(LoginRequest loginRequest) {
         UserResponse userResponse = userService.loginUser(loginRequest);
         String token = authService.generateToken(userResponse.getId());
         return ResponseEntity.ok(new AuthResponse(userResponse, token));
@@ -49,7 +49,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<UserResponse> getUserByUserId(@PathVariable String id) {
+    public ResponseEntity<UserResponse> getUserByUserId(String id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 }

@@ -37,7 +37,7 @@ public class HabitController implements HabitApi {
     }
 
     @Override
-    public ResponseEntity<List<HabitResponse>> getAllHabits(@PathVariable String userId) {
+    public ResponseEntity<List<HabitResponse>> getAllHabits(String userId) {
         return ResponseEntity.ok(habitService.getAllHabits(userId));
     }
 
@@ -50,7 +50,7 @@ public class HabitController implements HabitApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteHabit(@PathVariable String userId, @PathVariable String id) {
+    public ResponseEntity<Void> deleteHabit(String userId, String id) {
         habitService.deleteHabit(id, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -65,17 +65,17 @@ public class HabitController implements HabitApi {
     }
 
     @Override
-    public ResponseEntity<HabitCompletionResponse> logCompletion(@PathVariable String userId, @PathVariable String id) {
+    public ResponseEntity<HabitCompletionResponse> logCompletion(String userId, String id) {
         return ResponseEntity.ok(completionService.logCompletion(id, userId));
     }
 
     @Override
-    public ResponseEntity<List<HabitCompletionResponse>> getHabitLogHistory(@PathVariable String userId, @PathVariable String id) {
+    public ResponseEntity<List<HabitCompletionResponse>> getHabitLogHistory(String userId, String id) {
         return ResponseEntity.ok(completionService.getHabitLogHistory(id, userId));
     }
 
     @Override
-    public ResponseEntity<StreakResponse> getHabitStreakHistory(@PathVariable String userId, @PathVariable String id) {
+    public ResponseEntity<StreakResponse> getHabitStreakHistory( String userId, String id) {
         return ResponseEntity.ok(streakService.getStreak(id, userId));
     }
 }
