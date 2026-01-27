@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: habit-tracker
+  namespace: habit-tracker-dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: habit-tracker
+  template:
+    metadata:
+      labels:
+        app: habit-tracker
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: app
+          image: habit-tracker-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: habit-tracker-secrets
+                  key: jwt-secret
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql-service:3306/habittracker"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: habit-tracker-secrets
+                  key: db-user
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: habit-tracker-secrets
+                  key: db-password
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis-service"
+            - name: SPRING_DATA_REDIS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: habit-tracker-secrets
+                  key: redis-user
+            - name: SPRING_DATA_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: habit-tracker-secrets
+                  key: redis-password
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 90
+            periodSeconds: 30
+      volumes:
+        - name: tmp
+          emptyDir: { }
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: habit-tracker
+  namespace: habit-tracker-dev
+spec:
+  type: NodePort
+  selector:
+    app: habit-tracker
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30080
