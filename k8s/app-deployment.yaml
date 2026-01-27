@@ -50,6 +50,12 @@ spec:
                   key: redis-password
             - name: SPRING_DATA_REDIS_PORT
               value: "6379"
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /actuator/health
