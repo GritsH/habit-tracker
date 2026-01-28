@@ -97,7 +97,7 @@ metadata:
   name: habit-tracker
   namespace: habit-tracker-dev
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: habit-tracker
   ports:

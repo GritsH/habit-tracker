@@ -4,6 +4,7 @@
 * Docker
 * Docker Compose
 * Minikube
+* Ingress Controller
 
 ## Docker Setup
 ### 1. Create Environment File
@@ -113,15 +114,31 @@ kubectl apply -f k8s/mysql-pvc.yaml
 kubectl apply -f k8s/mysql-deployment.yaml
 kubectl apply -f k8s/redis-deployment.yaml
 kubectl apply -f k8s/app-deployment.yaml
+kubectl apply -f k8s/ingress.yaml
 ```
 ### 4. Set namespace as default
 Run the following command to set the `habit-tracker-dev` namespace as the default namespace:
 ```
 kubectl config set-context --current --namespace=habit-tracker-dev
 ``` 
-### 5. Access API (Optional)
-Run the following command to be able to access application on localhost:
+### 5. Access API
+Run the following command to start a minikube tunnel:
 ```
-kubectl port-forward service/habit-tracker 8080:8080
+minikube tunnel
 ```
+Then, in a separate PowerShell window (run as Administrator), run the following command to get the ingress address:  
+**Note:** The namespace must be set to `habit-tracker-dev`.
+```
+kubectl get ingress
+```
+The result must show the table with ingress information. Copy the address of the `grits.habittracker.com` column and run the following command:
+```
+notepad C:\Windows\System32\drivers\etc\hosts
+```
+This will open a notepad app with the `hosts` file. Add the following line to the end of the file:
+```
+<your_ingress_address> grits.habittracker.com
+```
+**Note:** Replace `<your_ingress_address>` with the address from the table (e.g., `127.0.0.1`).
+
 
