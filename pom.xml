@@ -32,6 +32,7 @@
 
     <modules>
         <module>habit-tracker-api</module>
+        <module>habit-tracker-api-tests</module>
         <module>habit-tracker-server</module>
     </modules>
 

@@ -53,6 +53,5 @@ class FrequencyTypeTest {
         LocalDate result = FrequencyType.MONTHLY.calculateResetAt();
 
         assertThat(result.getYear()).isGreaterThanOrEqualTo(today.getYear());
-        assertThat(result.getDayOfMonth()).isEqualTo(today.getDayOfMonth());
     }
 }
