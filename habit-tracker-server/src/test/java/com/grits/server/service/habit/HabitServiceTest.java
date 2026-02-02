@@ -124,11 +124,11 @@ class HabitServiceTest {
                 CategoryType.MENTAL_HEALTH
         );
 
-        when(habitDao.getHabitById("id123")).thenReturn(habit);
-        when(habitDao.updateHabit(habit)).thenReturn(updatedHabit);
+        when(habitDao.getHabitById("id","id123")).thenReturn(habit);
+        when(habitDao.updateHabit(habit, "id")).thenReturn(updatedHabit);
         when(habitMapper.toDto(habit)).thenReturn(updatedResponse);
 
-        HabitResponse result = habitService.updateHabit("id123", updateHabitRequest);
+        HabitResponse result = habitService.updateHabit("id","id123", updateHabitRequest);
 
         verify(habitMapper).updateHabit(updateHabitRequest, habit);
         verify(streakDao).updateStreak("id123", updateHabitRequest.getFrequency());
@@ -140,8 +140,8 @@ class HabitServiceTest {
     @Test
     @DisplayName("should throw exception when updating the habit")
     void updateHabitWithException() {
-        when(habitDao.getHabitById("id123")).thenThrow(HabitNotFoundException.class);
+        when(habitDao.getHabitById("id", "id123")).thenThrow(HabitNotFoundException.class);
 
-        assertThatThrownBy(() -> habitService.updateHabit("id123", updateHabitRequest)).isInstanceOf(HabitNotFoundException.class);
+        assertThatThrownBy(() -> habitService.updateHabit("id", "id123", updateHabitRequest)).isInstanceOf(HabitNotFoundException.class);
     }
 }

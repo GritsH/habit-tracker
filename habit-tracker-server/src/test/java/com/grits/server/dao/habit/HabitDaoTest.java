@@ -85,7 +85,7 @@ class HabitDaoTest {
     @Test
     @DisplayName("should update existing habit")
     void updateHabit() {
-        habitDao.updateHabit(habit);
+        habitDao.updateHabit(habit, "id");
 
         verify(habitRepository).save(habit);
     }

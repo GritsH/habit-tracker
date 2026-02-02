@@ -32,6 +32,13 @@ public interface HabitApi {
     )
     ResponseEntity<List<HabitResponse>> getAllHabits(@PathVariable String userId);
 
+    @GetMapping("/{id}")
+    @Operation(
+            summary = "Get a habits",
+            description = "Retrieves a habits"
+    )
+    ResponseEntity<HabitResponse> getHabit(@PathVariable String userId, @PathVariable String id);
+
     @PostMapping
     @Operation(
             summary = "Create a new habit",

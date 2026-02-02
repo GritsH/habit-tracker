@@ -84,6 +84,39 @@ public class HabitOperations {
                 .extract().response();
     }
 
+    public static Response logCompletion(String userId, String token, String habitId) {
+        RestAssured.baseURI = BASE_URL;
+        return given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+        .when()
+                .post("/v1/users/{userId}/habits/{habitId}/completions", userId, habitId)
+        .then()
+                .extract().response();
+    }
+
+    public static Response getLogHistory(String userId, String token, String habitId) {
+        RestAssured.baseURI = BASE_URL;
+        return given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+        .when()
+                .get("/v1/users/{userId}/habits/{habitId}/completions", userId, habitId)
+        .then()
+                .extract().response();
+    }
+
+    public static Response getStreak(String userId, String token, String habitId) {
+        RestAssured.baseURI = BASE_URL;
+        return given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+        .when()
+                .get("/v1/users/{userId}/habits/{habitId}/streak", userId, habitId)
+        .then()
+                .extract().response();
+    }
+
     private static String createNewHabitRequestBody(String name, String startDate, String category) {
         return """
                 {

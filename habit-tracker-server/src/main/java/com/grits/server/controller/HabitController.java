@@ -39,6 +39,11 @@ public class HabitController implements HabitApi {
     }
 
     @Override
+    public ResponseEntity<HabitResponse> getHabit(String userId, String id) {
+        return ResponseEntity.ok(habitService.getHabit(id, userId));
+    }
+
+    @Override
     public ResponseEntity<HabitResponse> createNewHabit(CreateHabitRequest createHabitRequest, String userId) {
         return ResponseEntity.ok(habitService.createNewHabit(userId, createHabitRequest));
     }
@@ -51,7 +56,7 @@ public class HabitController implements HabitApi {
 
     @Override
     public ResponseEntity<HabitResponse> updateHabit(String userId, String id, UpdateHabitRequest updateHabitRequest) {
-        return ResponseEntity.ok(habitService.updateHabit(id, updateHabitRequest));
+        return ResponseEntity.ok(habitService.updateHabit(userId, id, updateHabitRequest));
     }
 
     @Override

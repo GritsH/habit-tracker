@@ -72,7 +72,7 @@ public class UpdateHabitApiTest {
         Response response = HabitOperations.updateHabit(testUserId, testUserToken, invalidHabitId, requestBody);
 
         assertThat(response.statusCode()).isEqualTo(404);
-        assertThat(response.jsonPath().getString("detail")).contains("Habit with id " + invalidHabitId + " not found");
+        assertThat(response.jsonPath().getString("detail")).contains("No information could be retrieved");
     }
 
     private String createUpdateHabitRequestBody() {
