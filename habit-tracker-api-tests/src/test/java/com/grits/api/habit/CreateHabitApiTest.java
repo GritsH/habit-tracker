@@ -3,9 +3,11 @@ package com.grits.api.habit;
 import com.grits.api.HabitOperations;
 import com.grits.api.UserOperation;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -15,14 +17,15 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
+@Execution(ExecutionMode.CONCURRENT)
 public class CreateHabitApiTest {
 
-    private static String testUserId;
+    private String testUserId;
 
-    private static String testUserToken;
+    private String testUserToken;
 
-    @BeforeAll
-    public static void setup() {
+    @BeforeEach
+    public void setup() {
         Response loginResponse = UserOperation.loginUser();
 
         testUserId = loginResponse.path("user.id");
