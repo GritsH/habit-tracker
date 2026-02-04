@@ -54,14 +54,14 @@ public class HabitDao {
         habitRepository.deleteById(habitId);
     }
 
-    @Cacheable(value = "habit", key = "#id")
-    public Habit getHabitById(String id) {
+    public Habit getHabitById(String userId, String id) {
+        checkHabitOwnership(id, userId);
         return habitRepository.findById(id).orElseThrow(() -> new HabitNotFoundException(id));
     }
 
     @CachePut(value = "habit", key = "#updated.id")
-    @CacheEvict(value = "userHabits", key = "#updated.user.id")
-    public Habit updateHabit(Habit updated) {
+    @CacheEvict(value = "userHabits", key = "#userId")
+    public Habit updateHabit(Habit updated, String userId) {
         try {
             return habitRepository.save(updated);
         } catch (ObjectOptimisticLockingFailureException e) {

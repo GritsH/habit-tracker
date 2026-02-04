@@ -33,6 +33,7 @@
     <modules>
         <module>habit-tracker-api</module>
         <module>habit-tracker-server</module>
+        <module>habit-tracker-api-tests</module>
     </modules>
 
     <dependencyManagement>
@@ -88,11 +89,17 @@
                 <artifactId>jjwt-jackson</artifactId>
                 <version>${jjwt.version}</version>
             </dependency>
-            <!-- Internal module dependencies -->
             <dependency>
                 <groupId>com.grits</groupId>
                 <artifactId>habit-tracker-api</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.10.0</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -104,7 +111,7 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <configuration>
-                        <skip>true</skip> <!-- Skip for parent module -->
+                        <skip>true</skip>
                     </configuration>
                 </plugin>
                 <plugin>

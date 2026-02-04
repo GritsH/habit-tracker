@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: habit-tracker
-  namespace: habit-tracker-dev
+  name: habit-tracker-test
+  namespace: habit-tracker-test
 spec:
   replicas: 2
   selector:
@@ -40,31 +40,31 @@ spec:
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: habit-tracker-secrets
+                  name: habit-tracker-test-secrets
                   key: jwt-secret
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:mysql://mysql-service:3306/habittracker"
+              value: "jdbc:mysql://mysql-test-service:3306/habittracker"
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: habit-tracker-secrets
+                  name: habit-tracker-test-secrets
                   key: db-user
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: habit-tracker-secrets
+                  name: habit-tracker-test-secrets
                   key: db-password
             - name: SPRING_DATA_REDIS_HOST
-              value: "redis-service"
+              value: "redis-test-service"
             - name: SPRING_DATA_REDIS_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: habit-tracker-secrets
+                  name: habit-tracker-test-secrets
                   key: redis-user
             - name: SPRING_DATA_REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: habit-tracker-secrets
+                  name: habit-tracker-test-secrets
                   key: redis-password
             - name: SPRING_DATA_REDIS_PORT
               value: "6379"
@@ -94,8 +94,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: habit-tracker
-  namespace: habit-tracker-dev
+  name: habit-tracker-test
+  namespace: habit-tracker-test
 spec:
   type: ClusterIP
   selector:

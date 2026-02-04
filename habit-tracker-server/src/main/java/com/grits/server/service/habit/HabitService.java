@@ -44,17 +44,25 @@ public class HabitService {
         return habitMapper.toDtoList(userHabits);
     }
 
+    @Transactional(readOnly = true)
+    public HabitResponse getHabit(String habitId, String userId) {
+        log.info("Retrieving habit {} for user {}", habitId, userId);
+        Habit userHabit = habitDao.getHabitById(userId, habitId);
+        log.info("Habit {} for user {} retrieved successfully", habitId, userId);
+        return habitMapper.toDto(userHabit);
+    }
+
     public void deleteHabit(String habitId, String userId) {
         log.info("Delete attempt for a habit with id: {}", habitId);
         habitDao.deleteHabit(habitId, userId);
         log.info("Habit with id {} deleted successfully", habitId);
     }
 
-    public HabitResponse updateHabit(String habitId, UpdateHabitRequest updateHabitRequest) {
+    public HabitResponse updateHabit(String userId, String habitId, UpdateHabitRequest updateHabitRequest) {
         log.info("Updating habit with id: {}", habitId);
-        Habit habit = habitDao.getHabitById(habitId);
+        Habit habit = habitDao.getHabitById(userId, habitId);
         habitMapper.updateHabit(updateHabitRequest, habit);
-        habitDao.updateHabit(habit);
+        habitDao.updateHabit(habit, userId);
         streakDao.updateStreak(habitId, updateHabitRequest.getFrequency());
         log.info("Habit {} updated successfully", habitId);
         return habitMapper.toDto(habit);
