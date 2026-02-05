@@ -1,4 +1,4 @@
-package com.grits.server;
+package com.grits.server.config;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DeserializationFeature;

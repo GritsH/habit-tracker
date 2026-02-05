@@ -1,4 +1,4 @@
-package com.grits.server;
+package com.grits.server.config;
 
 import com.grits.server.jwt.JwtAuthenticationFilter;
 import com.grits.server.service.auth.AuthService;
