@@ -1,48 +1,59 @@
 package com.grits.server.ratelimiting;
 
-import jakarta.servlet.Filter;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.BucketConfiguration;
+import io.github.bucket4j.distributed.proxy.ProxyManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Component
-public class RateLimitFilter implements Filter {
+@Profile("!test")
+public class RateLimitFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private RateLimitService rateLimitService;
+    private final ProxyManager<String> proxyManager;
+    private final BucketConfiguration bucketConfiguration;
 
-    @Override
-    public void doFilter(
-            ServletRequest request,
-            ServletResponse response,
-            FilterChain chain
-    ) throws IOException, ServletException {
-
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String ip = getClientIp(httpRequest);
-
-        if (!rateLimitService.isAllowed(ip, 50, 60)) {
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.setStatus(429);
-            httpResponse.setContentType("application/json");
-            httpResponse.getWriter().write("{\"error\":\"Too many requests. Please try again later.\"}");
-            return;
-        }
-        chain.doFilter(request, response);
+    public RateLimitFilter(ProxyManager<String> proxyManager,
+                           BucketConfiguration bucketConfiguration) {
+        this.proxyManager = proxyManager;
+        this.bucketConfiguration = bucketConfiguration;
     }
 
-    private String getClientIp(HttpServletRequest request) {
-        String xfHeader = request.getHeader("X-Forwarded-For");
-        if (xfHeader != null) {
-            return xfHeader.split(",")[0];
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String key = resolveKey(request);
+
+        Bucket bucket = proxyManager.builder().build(key, () -> bucketConfiguration);
+
+        if (bucket.tryConsume(1)) {
+            filterChain.doFilter(request, response);
+        } else {
+            response.setStatus(429);
+            response.getWriter().write("Too many requests");
         }
-        return request.getRemoteAddr();
+    }
+
+    private String resolveKey(HttpServletRequest request) {
+
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()
+                && authentication.getPrincipal() instanceof String userId) {
+            return "rate_limit:user:" + userId;
+        }
+
+        return "rate_limit:ip:" + request.getRemoteAddr();
     }
 }
