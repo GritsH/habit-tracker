@@ -1,6 +1,7 @@
 package com.grits.api.user;
 
 import com.grits.api.UserOperation;
+import com.grits.api.model.response.AuthResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,9 +15,9 @@ public class LogoutApiTest {
 
     @BeforeEach
     public void setUp() {
-        Response loginResponse = UserOperation.loginUser();
+        AuthResponse loginResponse = UserOperation.loginUser();
 
-        testUserToken = loginResponse.path("token");
+        testUserToken = loginResponse.getToken();
     }
 
     @Test

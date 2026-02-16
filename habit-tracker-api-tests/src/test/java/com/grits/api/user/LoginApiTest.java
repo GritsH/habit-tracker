@@ -1,6 +1,7 @@
 package com.grits.api.user;
 
 import com.grits.api.UserOperation;
+import com.grits.api.model.response.AuthResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -8,6 +9,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
+import static com.grits.api.util.Constants.FIRST_NAME;
+import static com.grits.api.util.Constants.GMAIL;
+import static com.grits.api.util.Constants.LAST_NAME;
+import static com.grits.api.util.Constants.PASSWORD;
+import static com.grits.api.util.Constants.TOKEN_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -15,12 +21,12 @@ public class LoginApiTest {
 
     private String validEmail;
 
-    private final String validPassword = UserOperation.PASSWORD;
+    private final String validPassword = PASSWORD;
 
     @BeforeEach
     public void setup() {
-        Response response = UserOperation.signUpUser();
-        validEmail = response.jsonPath().getString("user.email");
+        AuthResponse response = UserOperation.signUpUser();
+        validEmail = response.getUser().getEmail();
     }
 
     @Test
@@ -31,10 +37,10 @@ public class LoginApiTest {
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(response.jsonPath().getString("user.id")).isNotNull();
         assertThat(response.jsonPath().getString("user.email")).isEqualTo(validEmail);
-        assertThat(response.jsonPath().getString("user.firstName")).isEqualTo("John");
-        assertThat(response.jsonPath().getString("user.lastName")).isEqualTo("Doe");
+        assertThat(response.jsonPath().getString("user.firstName")).isEqualTo(FIRST_NAME);
+        assertThat(response.jsonPath().getString("user.lastName")).isEqualTo(LAST_NAME);
         assertThat(response.jsonPath().getString("token")).isNotNull();
-        assertThat(response.jsonPath().getString("tokenType")).isEqualTo("Bearer");
+        assertThat(response.jsonPath().getString("tokenType")).isEqualTo(TOKEN_TYPE);
     }
 
     @Test
@@ -51,7 +57,7 @@ public class LoginApiTest {
     @Test
     @DisplayName("should not login a user with non-existent email")
     public void testLoginWithNonExistentEmail() {
-        String nonExistentEmail = "nonexistent_" + UUID.randomUUID().toString().substring(0, 12) + "@gmail.com";
+        String nonExistentEmail = "nonexistent_" + UUID.randomUUID().toString().substring(0, 12) + GMAIL;
         Response response = UserOperation.loginUser(nonExistentEmail, validPassword);
 
         assertThat(response.statusCode()).isEqualTo(404);

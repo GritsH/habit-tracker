@@ -2,6 +2,8 @@ package com.grits.api.habit;
 
 import com.grits.api.HabitOperations;
 import com.grits.api.UserOperation;
+import com.grits.api.model.response.AuthResponse;
+import com.grits.api.model.response.HabitResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,13 +24,13 @@ public class UpdateHabitApiTest {
 
     @BeforeEach
     public void setup() {
-        Response loginResponse = UserOperation.loginUser();
+        AuthResponse loginResponse = UserOperation.loginUser();
 
-        testUserId = loginResponse.path("user.id");
-        testUserToken = loginResponse.path("token");
+        testUserId = loginResponse.getUser().getId();
+        testUserToken = loginResponse.getToken();
 
-        Response createHabitResponse = HabitOperations.createHabit(testUserId, testUserToken);
-        testHabitId = createHabitResponse.path("id");
+        HabitResponse createHabitResponse = HabitOperations.createHabit(testUserId, testUserToken);
+        testHabitId = createHabitResponse.getId();
     }
 
     @Test

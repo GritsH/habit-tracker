@@ -1,6 +1,7 @@
 package com.grits.api.user;
 
 import com.grits.api.UserOperation;
+import com.grits.api.model.response.AuthResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
+import static com.grits.api.util.Constants.FIRST_NAME;
+import static com.grits.api.util.Constants.LAST_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetUserApiTest {
@@ -22,12 +25,12 @@ public class GetUserApiTest {
 
     @BeforeEach
     public void setup() {
-        Response loginResponse = UserOperation.loginUser();
+        AuthResponse loginResponse = UserOperation.loginUser();
 
-        testUserId = loginResponse.path("user.id");
-        testEmail = loginResponse.path("user.email");
-        testUsername = loginResponse.path("user.username");
-        testUserToken = loginResponse.path("token");
+        testUserId = loginResponse.getUser().getId();
+        testEmail = loginResponse.getUser().getEmail();
+        testUsername = loginResponse.getUser().getUsername();
+        testUserToken = loginResponse.getToken();
     }
 
     @Test
@@ -38,8 +41,8 @@ public class GetUserApiTest {
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(response.jsonPath().getString("id")).isEqualTo(testUserId);
         assertThat(response.jsonPath().getString("email")).isEqualTo(testEmail);
-        assertThat(response.jsonPath().getString("firstName")).isEqualTo("John");
-        assertThat(response.jsonPath().getString("lastName")).isEqualTo("Doe");
+        assertThat(response.jsonPath().getString("firstName")).isEqualTo(FIRST_NAME);
+        assertThat(response.jsonPath().getString("lastName")).isEqualTo(LAST_NAME);
         assertThat(response.jsonPath().getString("username")).isEqualTo(testUsername);
         assertThat(response.jsonPath().getString("password")).isNull();
         assertThat(response.jsonPath().getString("token")).isNull();
