@@ -130,6 +130,6 @@ public class HabitOperations {
                     "frequency": "DAILY",
                     "category": "%s"
                 }
-                """.formatted(name,HABIT_DESCRIPTION, startDate, category);
+                """.formatted(name, HABIT_DESCRIPTION, startDate, category);
     }
 }
