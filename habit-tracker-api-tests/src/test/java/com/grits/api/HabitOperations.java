@@ -1,26 +1,30 @@
 package com.grits.api;
 
+import com.grits.api.model.response.HabitResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 import java.time.LocalDate;
 
+import static com.grits.api.util.Constants.BASE_URL;
+import static com.grits.api.util.Constants.HABIT_CATEGORY;
+import static com.grits.api.util.Constants.HABIT_DESCRIPTION;
+import static com.grits.api.util.Constants.HABIT_NAME;
+import static com.grits.api.util.Constants.TOKEN_TYPE;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class HabitOperations {
 
-    private static final String BASE_URL = "http://grits.test.habittracker.com";
-
-    public static Response createHabit(String userId, String token) {
+    public static HabitResponse createHabit(String userId, String token) {
         RestAssured.baseURI = BASE_URL;
-        String requestBody = createNewHabitRequestBody("Morning Meditation", LocalDate.now().toString(), "MENTAL_HEALTH");
+        String requestBody = createNewHabitRequestBody(HABIT_NAME, LocalDate.now().toString(), HABIT_CATEGORY);
 
         return given()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", TOKEN_TYPE + " " + token)
                 .body(requestBody)
         .when()
                 .post("/v1/users/{userId}/habits", userId)
@@ -28,12 +32,12 @@ public class HabitOperations {
                 .statusCode(200)
                 .body("id", notNullValue())
                 .body("version", equalTo(0))
-                .body("name", equalTo("Morning Meditation"))
-                .body("description", equalTo("Description"))
-                .body("category", equalTo("MENTAL_HEALTH"))
+                .body("name", equalTo(HABIT_NAME))
+                .body("description", equalTo(HABIT_DESCRIPTION))
+                .body("category", equalTo(HABIT_CATEGORY))
                 .body("createdAt", equalTo(LocalDate.now().toString()))
                 .body("startDate", equalTo(LocalDate.now().toString()))
-                .extract().response();
+                .extract().response().as(HabitResponse.class);
     }
 
     public static Response createHabit(String userId, String token, String name, String startDate, String category) {
@@ -42,7 +46,7 @@ public class HabitOperations {
 
         return given()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", TOKEN_TYPE + " " + token)
                 .body(requestBody)
         .when()
                 .post("/v1/users/{userId}/habits", userId)
@@ -54,7 +58,7 @@ public class HabitOperations {
         RestAssured.baseURI = BASE_URL;
         return given()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", TOKEN_TYPE + " " + token)
         .when()
                 .get("/v1/users/{userId}/habits", userId)
         .then()
@@ -65,7 +69,7 @@ public class HabitOperations {
         RestAssured.baseURI = BASE_URL;
         return given()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", TOKEN_TYPE + " " + token)
         .when()
                 .delete("/v1/users/{userId}/habits/{habitId}", userId, habitId)
         .then()
@@ -77,7 +81,7 @@ public class HabitOperations {
         return given()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", TOKEN_TYPE + " " + token)
         .when()
                 .patch("/v1/users/{userId}/habits/{habitId}", userId, habitId)
         .then()
@@ -88,7 +92,7 @@ public class HabitOperations {
         RestAssured.baseURI = BASE_URL;
         return given()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", TOKEN_TYPE + " " + token)
         .when()
                 .post("/v1/users/{userId}/habits/{habitId}/completions", userId, habitId)
         .then()
@@ -99,7 +103,7 @@ public class HabitOperations {
         RestAssured.baseURI = BASE_URL;
         return given()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", TOKEN_TYPE + " " + token)
         .when()
                 .get("/v1/users/{userId}/habits/{habitId}/completions", userId, habitId)
         .then()
@@ -110,7 +114,7 @@ public class HabitOperations {
         RestAssured.baseURI = BASE_URL;
         return given()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", TOKEN_TYPE + " " + token)
         .when()
                 .get("/v1/users/{userId}/habits/{habitId}/streak", userId, habitId)
         .then()
@@ -121,11 +125,11 @@ public class HabitOperations {
         return """
                 {
                     "name": "%s",
-                    "description": "Description",
+                    "description": "%s",
                     "startDate": "%s",
                     "frequency": "DAILY",
                     "category": "%s"
                 }
-                """.formatted(name, startDate, category);
+                """.formatted(name, HABIT_DESCRIPTION, startDate, category);
     }
 }

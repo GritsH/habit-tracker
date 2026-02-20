@@ -10,6 +10,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.UUID;
 
+import static com.grits.api.util.Constants.GMAIL;
+import static com.grits.api.util.Constants.PASSWORD;
+import static com.grits.api.util.Constants.TEST_PREFIX;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SignUpApiTest {
@@ -18,12 +21,12 @@ public class SignUpApiTest {
 
     private String testEmail;
 
-    private final String testPassword = UserOperation.PASSWORD;
+    private final String testPassword = PASSWORD;
 
     @BeforeEach
     public void setup() {
-        testUsername = "test_" + UUID.randomUUID().toString().substring(0, 12);
-        testEmail = "test_" + UUID.randomUUID().toString().substring(0, 12) + "@gmail.com";
+        testUsername = TEST_PREFIX + UUID.randomUUID().toString().substring(0, 12);
+        testEmail = TEST_PREFIX + UUID.randomUUID().toString().substring(0, 12) + GMAIL;
     }
 
     @Test
