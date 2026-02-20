@@ -45,8 +45,8 @@ public class RateLimitConfig {
     @Bean
     public BucketConfiguration bucketConfiguration() {
         Bandwidth limit = Bandwidth.builder()
-                .capacity(100)
-                .refillGreedy(100, Duration.ofMinutes(1))
+                .capacity(140)
+                .refillGreedy(10, Duration.ofSeconds(1))
                 .build();
 
         return BucketConfiguration.builder()

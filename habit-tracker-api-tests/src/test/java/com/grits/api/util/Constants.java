@@ -2,7 +2,7 @@ package com.grits.api.util;
 
 public class Constants {
 
-    public static final String BASE_URL = "http://grits.test.habittracker.com";
+    public static final String BASE_URL = "http://localhost:8090";
     public static final String PASSWORD = "123password";
     public static final String TEST_PREFIX = "test_";
     public static final String GMAIL = "@gmail.com";
