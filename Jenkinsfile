@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+            maven 'Maven-3'
+        }
+
     environment {
         IMAGE_NAME = "habit-tracker-app:latest" //${BUILD_NUMBER}
         TEST_NAMESPACE = "habit-tracker-test"
