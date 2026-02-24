@@ -154,7 +154,7 @@ pipeline {
                 bat '''
                 kubectl rollout status deployment/mysql-deployment -n %DEV_NAMESPACE% --timeout=180s
                 kubectl rollout status deployment/redis-deployment -n %DEV_NAMESPACE% --timeout=180s
-                kubectl rollout status deployment/habit-tracker-test -n %DEV_NAMESPACE% --timeout=180s
+                kubectl rollout status deployment/habit-tracker-dev -n %DEV_NAMESPACE% --timeout=180s
                 '''
             }
         }
