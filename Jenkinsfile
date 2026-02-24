@@ -70,12 +70,33 @@ pipeline {
         stage('Wait For Test Pods') {
             steps {
                 bat '''
-                kubectl rollout status deployment/mysql-test -n %TEST_NAMESPACE% --timeout=180s
-                kubectl rollout status deployment/redis-test -n %TEST_NAMESPACE% --timeout=180s
+                kubectl rollout status deployment/mysql-deployment -n %TEST_NAMESPACE% --timeout=180s
+                kubectl rollout status deployment/redis-deployment -n %TEST_NAMESPACE% --timeout=180s
                 kubectl rollout status deployment/habit-tracker-test -n %TEST_NAMESPACE% --timeout=180s
                 '''
             }
         }
+
+         stage('Wait For HTTP Availability') {
+            steps {
+                bat '''
+                echo Waiting for application to respond via ingress...
+
+                for /L %%i in (1,1,40) do (
+                    curl -s %BASE_URL% > nul 2>&1
+                    if not errorlevel 1 (
+                        echo Application is reachable.
+                        exit /b 0
+                    )
+                    echo Not ready yet...
+                    ping 127.0.0.1 -n 5 > nul
+                )
+
+                echo Application did not become ready in time.
+                exit /b 1
+                '''
+            }
+         }
 
         stage('Unit Tests') {
             steps {
