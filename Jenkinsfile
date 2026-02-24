@@ -2,18 +2,17 @@ pipeline {
     agent any
 
     tools {
-            maven 'Maven-3'
-        }
+        maven 'Maven-3'
+    }
 
     environment {
-        IMAGE_NAME = "habit-tracker-app:latest" //${BUILD_NUMBER}
+        IMAGE_NAME = "habit-tracker-app:latest"
         TEST_NAMESPACE = "habit-tracker-test"
-        DEV_NAMESPACE = "habit-tracker-dev"
-        TEST_PORT = "8090"
+        BASE_URL = "http://grits.test.habittracker.com"
     }
 
     triggers {
-        pollSCM('H/2 * * * *')  // or use webhook instead
+        pollSCM('H/2 * * * *')
     }
 
     stages {
@@ -26,9 +25,83 @@ pipeline {
             }
         }
 
+        stage('Enable Ingress Addon') {
+            steps {
+                bat 'minikube addons enable ingress'
+            }
+        }
+
+        stage('Start Minikube Tunnel') {
+            steps {
+                bat '''
+                echo Starting tunnel in background...
+                start "" /B minikube tunnel
+                ping 127.0.0.1 -n 10 > nul
+                '''
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t %IMAGE_NAME% .'
+            }
+        }
+
+        stage('Deploy Test Environment') {
+            steps {
+                bat '''
+                kubectl delete namespace %TEST_NAMESPACE% --ignore-not-found=true
+                kubectl apply -f k8s/test/namespace.yaml
+                kubectl apply -f k8s/test/secrets.yaml
+                kubectl apply -f k8s/test/mysql-deployment.yaml
+                kubectl apply -f k8s/test/redis-deployment.yaml
+                kubectl apply -f k8s/test/app-deployment.yaml
+                kubectl apply -f k8s/test/ingress.yaml
+                '''
+            }
+        }
+
+        stage('Wait For Test Pods') {
+            steps {
+                bat '''
+                kubectl rollout status deployment/mysql-deployment -n %TEST_NAMESPACE% --timeout=180s
+                kubectl rollout status deployment/redis-deployment -n %TEST_NAMESPACE% --timeout=180s
+                kubectl rollout status deployment/habit-tracker-test -n %TEST_NAMESPACE% --timeout=180s
+                '''
+            }
+        }
+
+        stage('Wait For HTTP Availability') {
+            steps {
+                bat '''
+                echo Waiting for application to respond via ingress...
+
+                set SUCCESS=0
+
+                for /L %%i in (1,1,40) do (
+                    curl -s %BASE_URL% > nul 2>&1
+                    if not errorlevel 1 (
+                        echo Application is reachable.
+                        set SUCCESS=1
+                        goto :done
+                    )
+                    echo Not ready yet...
+                    ping 127.0.0.1 -n 5 > nul
+                )
+
+                :done
+
+                if "%SUCCESS%"=="0" (
+                    echo Application did not become ready in time.
+                    exit /b 1
+                )
+                '''
             }
         }
 
@@ -43,57 +116,9 @@ pipeline {
             }
         }
 
-        stage('Configure Docker To Use Minikube') {
-            steps {
-                bat '''
-                for /f "tokens=*" %%i in ('minikube docker-env --shell cmd') do %%i
-                '''
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                bat '''
-                docker build -t %IMAGE_NAME% .
-                '''
-            }
-        }
-
-        stage('Deploy Test Namespace') {
-            steps {
-                bat '''
-                kubectl delete namespace %TEST_NAMESPACE% --ignore-not-found=true
-                kubectl apply -f k8s/test/namespace.yaml
-                kubectl apply -f k8s/test/secrets.yaml
-                kubectl apply -f k8s/test/mysql-deployment.yaml
-                kubectl apply -f k8s/test/redis-deployment.yaml
-                kubectl apply -f k8s/test/app-deployment.yaml
-                '''
-            }
-        }
-
-        stage('Wait For Test Pods') {
-            steps {
-                bat '''
-                kubectl wait --for=condition=ready pod --all -n %TEST_NAMESPACE% --timeout=180s
-                '''
-            }
-        }
-
-        stage('Port Forward Test Service') {
-            steps {
-                bat '''
-                start /B kubectl port-forward svc/habit-tracker-test %TEST_PORT%:8080 -n %TEST_NAMESPACE%
-                timeout /t 10
-                '''
-            }
-        }
-
         stage('Run API Tests') {
             steps {
-                bat '''
-                mvn -pl habit-tracker-api-tests test -Dbase.url=http://localhost:%TEST_PORT%
-                '''
+                bat "mvn -pl habit-tracker-api-tests test -Dbase.url=%BASE_URL%"
             }
             post {
                 always {
@@ -104,26 +129,7 @@ pipeline {
 
         stage('Cleanup Test Namespace') {
             steps {
-                bat '''
-                kubectl delete namespace %TEST_NAMESPACE%
-                '''
-            }
-        }
-
-        stage('Deploy Dev Environment') {
-            when {
-                branch 'main'
-            }
-            steps {
-                bat '''
-                kubectl apply -f k8s/namespace.yaml
-                kubectl apply -f k8s/secrets.yaml
-                kubectl apply -f k8s/mysql-pvc.yaml
-                kubectl apply -f k8s/mysql-deployment.yaml
-                kubectl apply -f k8s/redis-deployment.yaml
-                kubectl apply -f k8s/app-deployment.yaml
-                kubectl apply -f k8s/ingress.yaml
-                '''
+                bat 'kubectl delete namespace %TEST_NAMESPACE%'
             }
         }
     }
