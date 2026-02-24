@@ -133,63 +133,6 @@ pipeline {
                 bat 'kubectl delete namespace %TEST_NAMESPACE%'
             }
         }
-
-        stage('Deploy Dev Environment') {
-            steps {
-                bat '''
-                kubectl delete namespace %TEST_NAMESPACE% --ignore-not-found=true
-                kubectl apply -f k8s/namespace.yaml
-                kubectl apply -f k8s/secrets.yaml
-                kubectl apply -f k8s/mysql-pvc.yaml
-                kubectl apply -f k8s/mysql-deployment.yaml
-                kubectl apply -f k8s/redis-deployment.yaml
-                kubectl apply -f k8s/app-deployment.yaml
-                kubectl apply -f k8s/ingress.yaml
-                '''
-            }
-        }
-
-        stage('Wait For Dev Pods') {
-            steps {
-                bat '''
-                kubectl rollout status deployment/mysql-deployment -n %DEV_NAMESPACE% --timeout=180s
-                kubectl rollout status deployment/redis-deployment -n %DEV_NAMESPACE% --timeout=180s
-                kubectl rollout status deployment/habit-tracker-dev -n %DEV_NAMESPACE% --timeout=180s
-                '''
-            }
-        }
-
-
-        stage('Check Dev Application Health') {
-            when {
-                branch 'main'
-            }
-            steps {
-                bat '''
-                echo Checking health endpoint...
-
-                set SUCCESS=0
-
-                for /L %%i in (1,1,40) do (
-                    curl -s http://grits.habittracker.com/actuator/health | findstr "UP" > nul
-                    if not errorlevel 1 (
-                        echo Application is healthy.
-                        set SUCCESS=1
-                        goto :done
-                    )
-                    echo Health not ready yet...
-                    ping 127.0.0.1 -n 5 > nul
-                )
-
-                :done
-
-                if "%SUCCESS%"=="0" (
-                    echo Health check failed.
-                    exit /b 1
-                )
-                '''
-            }
-        }
     }
 
     post {
