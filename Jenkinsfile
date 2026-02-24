@@ -79,12 +79,9 @@ pipeline {
             }
         }
 
-        stage('Start Minikube Tunnel') {
+        stage('Wait For Ingress') {
             steps {
-                bat '''
-                start /B minikube tunnel
-                timeout /t 10
-                '''
+                bat 'ping 127.0.0.1 -n 10 > nul'
             }
         }
 
