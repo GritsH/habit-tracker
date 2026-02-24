@@ -26,6 +26,14 @@ pipeline {
             }
         }
 
+        stage('Enable Ingress') {
+            steps {
+                bat '''
+                minikube addons enable ingress
+                '''
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -67,14 +75,6 @@ pipeline {
             steps {
                 bat '''
                 kubectl wait --for=condition=ready pod --all -n %TEST_NAMESPACE% --timeout=180s
-                '''
-            }
-        }
-
-        stage('Enable Ingress') {
-            steps {
-                bat '''
-                minikube addons enable ingress
                 '''
             }
         }
