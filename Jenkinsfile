@@ -77,26 +77,33 @@ pipeline {
             }
         }
 
-         stage('Wait For HTTP Availability') {
+        stage('Wait For HTTP Availability') {
             steps {
                 bat '''
                 echo Waiting for application to respond via ingress...
+
+                set SUCCESS=0
 
                 for /L %%i in (1,1,40) do (
                     curl -s %BASE_URL% > nul 2>&1
                     if not errorlevel 1 (
                         echo Application is reachable.
-                        exit /b 0
+                        set SUCCESS=1
+                        goto :done
                     )
                     echo Not ready yet...
                     ping 127.0.0.1 -n 5 > nul
                 )
 
-                echo Application did not become ready in time.
-                exit /b 1
+                :done
+
+                if "%SUCCESS%"=="0" (
+                    echo Application did not become ready in time.
+                    exit /b 1
+                )
                 '''
             }
-         }
+        }
 
         stage('Unit Tests') {
             steps {
