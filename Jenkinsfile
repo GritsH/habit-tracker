@@ -13,7 +13,7 @@ pipeline {
     }
 
     triggers {
-        pollSCM('H/2 * * * *')  // or use webhook instead
+        pollSCM('H/2 * * * *')
     }
 
     stages {
@@ -32,16 +32,6 @@ pipeline {
             }
         }
 
-        stage('Unit Tests') {
-            steps {
-                bat 'mvn clean verify -DskipITs'
-            }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
-        }
 
         stage('Configure Docker To Use Minikube') {
             steps {
@@ -68,6 +58,7 @@ pipeline {
                 kubectl apply -f k8s/test/mysql-deployment.yaml
                 kubectl apply -f k8s/test/redis-deployment.yaml
                 kubectl apply -f k8s/test/app-deployment.yaml
+                kubectl apply -f k8s/test/ingress.yaml
                 '''
             }
         }
@@ -80,19 +71,38 @@ pipeline {
             }
         }
 
-        stage('Port Forward Test Service') {
+        stage('Enable Ingress') {
             steps {
                 bat '''
-                start /B kubectl port-forward svc/habit-tracker-test %TEST_PORT%:8080 -n %TEST_NAMESPACE%
+                minikube addons enable ingress
+                '''
+            }
+        }
+
+        stage('Start Minikube Tunnel') {
+            steps {
+                bat '''
+                start /B minikube tunnel
                 timeout /t 10
                 '''
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                bat 'mvn clean verify -DskipITs'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
             }
         }
 
         stage('Run API Tests') {
             steps {
                 bat '''
-                mvn -pl habit-tracker-api-tests test -Dbase.url=http://localhost:%TEST_PORT%
+                mvn -pl habit-tracker-api-tests test -Dbase.url=http://grits.test.habittracker.com
                 '''
             }
             post {
