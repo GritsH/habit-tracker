@@ -35,7 +35,6 @@ pipeline {
         stage('Start Minikube Tunnel') {
             steps {
                 bat '''
-                echo Starting tunnel in background...
                 start "" /B minikube tunnel
                 ping 127.0.0.1 -n 10 > nul
                 '''
@@ -48,9 +47,26 @@ pipeline {
             }
         }
 
+        stage('Maven Build') {
+            steps {
+                bat '''
+                mvn clean verify ^
+                -pl "!habit-tracker-api-tests" ^
+                -am ^
+                -DskipITs
+                '''
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t %IMAGE_NAME% .'
+                bat 'minikube image load %IMAGE_NAME%'
             }
         }
 
@@ -75,45 +91,6 @@ pipeline {
                 kubectl rollout status deployment/redis-deployment -n %TEST_NAMESPACE% --timeout=180s
                 kubectl rollout status deployment/habit-tracker-test -n %TEST_NAMESPACE% --timeout=180s
                 '''
-            }
-        }
-
-        stage('Wait For HTTP Availability') {
-            steps {
-                bat '''
-                echo Waiting for application to respond via ingress...
-
-                set SUCCESS=0
-
-                for /L %%i in (1,1,40) do (
-                    curl -s %BASE_URL% > nul 2>&1
-                    if not errorlevel 1 (
-                        echo Application is reachable.
-                        set SUCCESS=1
-                        goto :done
-                    )
-                    echo Not ready yet...
-                    ping 127.0.0.1 -n 5 > nul
-                )
-
-                :done
-
-                if "%SUCCESS%"=="0" (
-                    echo Application did not become ready in time.
-                    exit /b 1
-                )
-                '''
-            }
-        }
-
-        stage('Unit Tests') {
-            steps {
-                bat 'mvn clean verify -DskipITs'
-            }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
             }
         }
 
