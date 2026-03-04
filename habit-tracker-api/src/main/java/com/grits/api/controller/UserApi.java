@@ -1,6 +1,7 @@
 package com.grits.api.controller;
 
 import com.grits.api.model.request.LoginRequest;
+import com.grits.api.model.request.RefreshRequest;
 import com.grits.api.model.request.SignupRequest;
 import com.grits.api.model.response.AuthResponse;
 import com.grits.api.model.response.UserResponse;
@@ -40,7 +41,7 @@ public interface UserApi {
             description = "Terminate user's session"
     )
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<Void> logout(HttpServletRequest request);
+    ResponseEntity<Void> logout(HttpServletRequest request, RefreshRequest refreshRequest);
 
     @GetMapping("/users/{id}")
     @Operation(
@@ -49,4 +50,11 @@ public interface UserApi {
     )
     @PreAuthorize("#id == authentication.principal")
     ResponseEntity<UserResponse> getUserByUserId(@PathVariable String id);
+
+    @PostMapping("/refresh")
+    @Operation(
+            summary = "Refresh token",
+            description = "Refreshes user's token"
+    )
+    ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshRequest request);
 }

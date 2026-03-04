@@ -7,7 +7,9 @@ public class AuthResponse {
 
     UserResponse user;
 
-    String token;
+    String accessToken;
+
+    String refreshToken;
 
     String tokenType = "Bearer";
 }

@@ -17,7 +17,7 @@ public class LogoutApiTest {
     public void setUp() {
         AuthResponse loginResponse = UserOperation.loginUser();
 
-        testUserToken = loginResponse.getToken();
+        testUserToken = loginResponse.getAccessToken();
     }
 
     @Test

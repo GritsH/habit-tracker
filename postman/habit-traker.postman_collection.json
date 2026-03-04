@@ -21,12 +21,11 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/signup",
+          "raw": "http://{{local}}/v1/signup",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "v1",
             "signup"
@@ -44,7 +43,8 @@
             "exec": [
               "const jsonData = pm.response.json();\r",
               "pm.collectionVariables.set(\"userId\", jsonData.user.id);\r",
-              "pm.collectionVariables.set(\"authToken\", jsonData.token);"
+              "pm.collectionVariables.set(\"authToken\", jsonData.accessToken);\r",
+              "pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -65,12 +65,11 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/login",
+          "raw": "http://{{local}}/v1/login",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "v1",
             "login"
@@ -95,12 +94,11 @@
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/logout",
+          "raw": "http://{{local}}/v1/logout",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "v1",
             "logout"
@@ -139,16 +137,47 @@
           "raw": "{\r\n    \"email\": \"email@gmail.com\",\r\n    \"password\": \"123password\"\r\n}"
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/{{userId}}",
+          "raw": "http://{{local}}/v1/users/{{userId}}",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "v1",
             "users",
             "{{userId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get habit",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://{{local}}/v1/users/{{userId}}/habits/{{habitId}}",
+          "protocol": "http",
+          "host": [
+            "{{local}}"
+          ],
+          "path": [
+            "v1",
+            "users",
+            "{{userId}}",
+            "habits",
+            "{{habitId}}"
           ]
         }
       },
@@ -189,12 +218,11 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/{{userId}}/habits",
+          "raw": "http://{{local}}/v1/users/{{userId}}/habits",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "v1",
             "users",
@@ -243,7 +271,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"name\": \"testing33\",\r\n    \"description\": \"Super duper decription\",\r\n    \"startDate\": \"2026-11-17\",\r\n    \"frequency\": \"DAILY\",\r\n    \"category\": \"MENTAL_HEALTH\"\r\n}",
+          "raw": "{\r\n    \"name\": \"habit\",\r\n    \"description\": \"Super duper decription\",\r\n    \"startDate\": \"2026-11-17\",\r\n    \"frequency\": \"DAILY\",\r\n    \"category\": \"MENTAL_HEALTH\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -251,12 +279,11 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/{{userId}}/habits",
+          "raw": "http://{{local}}/v1/users/{{userId}}/habits",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "v1",
             "users",
@@ -294,12 +321,11 @@
           "raw": "{\r\n    \"name\": \"New habit\",\r\n    \"description\": \"That's a super duper new Habit. I wanna do bunch of things\",\r\n    \"startDate\": \"2025-12-19\",\r\n    \"frequency\": \"Daily\",\r\n    \"habitCategory\": \"Mental health\"\r\n}"
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/{{userId}}/habits/{{habitId}}",
+          "raw": "http://{{local}}/v1/users/{{userId}}/habits/{{habitId}}",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "v1",
             "users",
@@ -335,15 +361,19 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"name\": \"New habit\",\r\n    \"description\": \"That's a super duper new Habit. I wanna do bunch of things\",\r\n    \"startDate\": \"2025-12-19\",\r\n    \"frequency\": \"Daily\",\r\n    \"habitCategory\": \"Mental health\"\r\n}"
+          "raw": "{\r\n    \"name\": \"New habit!!\",\r\n    \"description\": \"duper new Habit. I wanna do bunch of things\",\r\n    \"startDate\": \"2026-12-19\",\r\n    \"frequency\": \"DAILY\",\r\n    \"category\": \"HOME\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/{{userId}}/habits/{{habitId}}",
+          "raw": "http://{{local}}/v1/users/{{userId}}/habits/{{habitId}}",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "v1",
             "users",
@@ -375,12 +405,11 @@
           "raw": "{\r\n    \"email\": \"email@gmail.com\",\r\n    \"password\": \"123password\",\r\n    \"firstName\": \"name\",\r\n    \"lastName\": \"surname\",\r\n    \"username\": \"UserName!@\"\r\n}"
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/{{userId}}/habits/{{habitId}}/completions",
+          "raw": "http://{{local}}/v1/users/{{userId}}/habits/{{habitId}}/completions",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "v1",
             "users",
@@ -409,12 +438,11 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/{{userId}}/habits/{{habitId}}/completions",
+          "raw": "http://{{local}}/v1/users/{{userId}}/habits/{{habitId}}/completions",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "v1",
             "users",
@@ -443,12 +471,11 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/{{userId}}/habits/{{habitId}}/streak",
+          "raw": "http://{{local}}/v1/users/{{userId}}/habits/{{habitId}}/streak",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "v1",
             "users",
@@ -467,15 +494,58 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/actuator/health",
+          "raw": "http://{{local}}/actuator/health",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{local}}"
           ],
-          "port": "8080",
           "path": [
             "actuator",
             "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "refresh",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData = pm.response.json();\r",
+              "pm.collectionVariables.set(\"userId\", jsonData.user.id);\r",
+              "pm.collectionVariables.set(\"authToken\", jsonData.accessToken);\r",
+              "pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"refreshToken\": \"{{refreshToken}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{local}}/v1/refresh",
+          "protocol": "http",
+          "host": [
+            "{{local}}"
+          ],
+          "path": [
+            "v1",
+            "refresh"
           ]
         }
       },
@@ -495,6 +565,21 @@
     },
     {
       "key": "habitId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "baseDevUrl",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "local",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "refreshToken",
       "value": "",
       "type": "default"
     }
