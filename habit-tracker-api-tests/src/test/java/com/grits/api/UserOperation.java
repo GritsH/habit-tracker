@@ -38,7 +38,8 @@ public class UserOperation {
                 .body("user.firstName", equalTo(FIRST_NAME))
                 .body("user.lastName", equalTo(LAST_NAME))
                 .body("user.username", equalTo(testUsername))
-                .body("token", notNullValue())
+                .body("accessToken", notNullValue())
+                .body("refreshToken", notNullValue())
                 .body("tokenType", equalTo(TOKEN_TYPE))
                 .extract().response().as(AuthResponse.class);
     }
@@ -74,7 +75,8 @@ public class UserOperation {
                 .body("user.email", equalTo(validEmail))
                 .body("user.firstName", equalTo(FIRST_NAME))
                 .body("user.lastName", equalTo(LAST_NAME))
-                .body("token", notNullValue())
+                .body("accessToken", notNullValue())
+                .body("refreshToken", notNullValue())
                 .body("tokenType", equalTo(TOKEN_TYPE))
                 .extract().response().as(AuthResponse.class);
     }
