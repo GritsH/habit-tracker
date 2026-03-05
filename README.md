@@ -103,7 +103,7 @@ minikube docker-env | Invoke-Expression
 Change directory to the root of the project and build the application image inside minikube.  
 For this, run the following command:
 ```
-docker build -t habit-tracker-app:latest .
+docker build -t habit-tracker-app:1.1.0 .
 ```
 When the building is complete, apply `.yaml` files in the following order:
 

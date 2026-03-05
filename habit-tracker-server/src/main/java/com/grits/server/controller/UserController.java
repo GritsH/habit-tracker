@@ -43,7 +43,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<Void> logout(HttpServletRequest request, RefreshRequest refreshRequest) {
+    public ResponseEntity<Void> logout(RefreshRequest refreshRequest, HttpServletRequest request) {
         authService.logout(request, refreshRequest.getRefreshToken());
         return ResponseEntity.ok().build();
     }

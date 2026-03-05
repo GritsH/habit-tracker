@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = "habit-tracker-app:latest"
+        IMAGE_NAME = "habit-tracker-app:1.1.0"
         TEST_NAMESPACE = "habit-tracker-test"
         DEV_NAMESPACE = "habit-tracker-dev"
         BASE_URL = "http://grits.test.habittracker.com"
@@ -65,6 +65,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
+                bat 'minikube image list | findstr /R /C:"^habit-tracker-app" >nul && minikube image rm $(minikube image list | findstr /R /C:"^habit-tracker-app")'
                 bat 'docker build -t %IMAGE_NAME% .'
                 bat 'minikube image load %IMAGE_NAME%'
             }

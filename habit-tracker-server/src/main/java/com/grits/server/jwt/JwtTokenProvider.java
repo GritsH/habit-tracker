@@ -80,7 +80,6 @@ public class JwtTokenProvider {
         deleteRefreshToken(refreshToken);
         String accessJti = getJtiFromToken(accessToken);
         Date expiryDate = getExpirationFromToken(accessToken);
-
         long ttl = expiryDate.getTime() - System.currentTimeMillis();
         if (ttl > 0) {
             redisTemplate.opsForValue().set(blacklistPrefix + accessJti, "blacklisted", Duration.ofMillis(ttl));

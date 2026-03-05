@@ -41,7 +41,7 @@ public interface UserApi {
             description = "Terminate user's session"
     )
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<Void> logout(HttpServletRequest request, RefreshRequest refreshRequest);
+    ResponseEntity<Void> logout(@Valid @RequestBody RefreshRequest refreshRequest, HttpServletRequest request);
 
     @GetMapping("/users/{id}")
     @Operation(

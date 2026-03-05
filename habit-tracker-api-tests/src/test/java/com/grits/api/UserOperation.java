@@ -94,10 +94,11 @@ public class UserOperation {
                 .extract().response();
     }
 
-    public static Response logoutUser(String token) {
+    public static Response logoutUser(String token, String refreshToken) {
         return given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", TOKEN_TYPE + " " + token)
+                .body(createLogoutRequestBody(refreshToken))
         .when()
                 .post("/v1/logout")
         .then()
@@ -121,6 +122,14 @@ public class UserOperation {
                 "password": "%s"
             }
             """.formatted(email, password);
+    }
+
+    private static String createLogoutRequestBody(String refreshToken) {
+        return """
+            {
+                "refreshToken": "%s"
+            }
+            """.formatted(refreshToken);
     }
 
     private static String createSignupRequestBody(String email, String password, String username) {
