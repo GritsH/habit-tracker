@@ -65,7 +65,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'minikube image list | findstr /R /C:"^habit-tracker-app" >nul && minikube image rm $(minikube image list | findstr /R /C:"^habit-tracker-app")'
+                bat 'minikube image list | findstr "habit-tracker-app" >nul && minikube image rm $(minikube image list | findstr "habit-tracker-app")'
                 bat 'docker build -t %IMAGE_NAME% .'
                 bat 'minikube image load %IMAGE_NAME%'
             }
