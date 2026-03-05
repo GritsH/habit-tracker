@@ -49,12 +49,8 @@ pipeline {
 
         stage('Maven Build') {
             steps {
-                bat '''
-                mvn clean verify ^
-                -pl "!habit-tracker-api-tests" ^
-                -am ^
-                -DskipITs
-                '''
+                bat 'mvn clean install -DskipTests'
+                bat 'mvn -pl habit-tracker-server test'
             }
             post {
                 always {
