@@ -89,11 +89,6 @@
                 <artifactId>jjwt-jackson</artifactId>
                 <version>${jjwt.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.grits</groupId>-->
-<!--                <artifactId>habit-tracker-api</artifactId>-->
-<!--                <version>${project.version}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
