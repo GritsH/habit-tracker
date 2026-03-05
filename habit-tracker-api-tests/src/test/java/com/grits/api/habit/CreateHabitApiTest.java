@@ -27,7 +27,7 @@ public class CreateHabitApiTest {
         AuthResponse loginResponse = UserOperation.loginUser();
 
         testUserId = loginResponse.getUser().getId();
-        testUserToken = loginResponse.getToken();
+        testUserToken = loginResponse.getAccessToken();
     }
 
     @Test

@@ -1,6 +1,8 @@
 package com.grits.server.service.auth;
 
+import com.grits.api.model.response.AuthResponse;
 import com.grits.server.jwt.JwtTokenProvider;
+import com.grits.server.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +18,12 @@ public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public String generateToken(String userId) {
-        return jwtTokenProvider.generateToken(userId);
+    public String generateAccessToken(String userId) {
+        return jwtTokenProvider.generateAccessToken(userId);
+    }
+
+    public String generateRefreshToken(String userId) {
+        return jwtTokenProvider.generateRefreshToken(userId);
     }
 
     public String extractAndValidateToken(HttpServletRequest request) {
@@ -28,10 +34,10 @@ public class AuthService {
         return null;
     }
 
-    public void invalidateToken(HttpServletRequest request) {
-        String token = extractToken(request);
-        if (token != null) {
-            jwtTokenProvider.invalidateToken(token);
+    public void logout(HttpServletRequest request, String refreshToken) {
+        String accessToken = extractToken(request);
+        if (accessToken != null && refreshToken != null) {
+            jwtTokenProvider.invalidateTokens(accessToken, refreshToken);
         }
         SecurityContextHolder.clearContext();
     }
@@ -39,6 +45,21 @@ public class AuthService {
     public Authentication createAuthentication(String token) {
         String userId = jwtTokenProvider.getUserIdFromToken(token);
         return new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
+    }
+
+    public AuthResponse refresh(String refreshToken, UserService userService) {
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
+            throw new RuntimeException("Invalid refresh token");
+        }
+        String userId = jwtTokenProvider.getUserIdFromToken(refreshToken);
+        jwtTokenProvider.deleteRefreshToken(refreshToken);
+        String newAccessToken = jwtTokenProvider.generateAccessToken(userId);
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(userId);
+        return new AuthResponse(
+                userService.getUserById(userId),
+                newAccessToken,
+                newRefreshToken
+        );
     }
 
     private String extractToken(HttpServletRequest request) {

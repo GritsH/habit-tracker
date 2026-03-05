@@ -39,7 +39,8 @@ public class LoginApiTest {
         assertThat(response.jsonPath().getString("user.email")).isEqualTo(validEmail);
         assertThat(response.jsonPath().getString("user.firstName")).isEqualTo(FIRST_NAME);
         assertThat(response.jsonPath().getString("user.lastName")).isEqualTo(LAST_NAME);
-        assertThat(response.jsonPath().getString("token")).isNotNull();
+        assertThat(response.jsonPath().getString("accessToken")).isNotNull();
+        assertThat(response.jsonPath().getString("refreshToken")).isNotNull();
         assertThat(response.jsonPath().getString("tokenType")).isEqualTo(TOKEN_TYPE);
     }
 
@@ -74,6 +75,6 @@ public class LoginApiTest {
 
         assertThat(firstResponse.statusCode()).isEqualTo(200);
         assertThat(secondResponse.statusCode()).isEqualTo(200);
-        assertNotEquals(firstResponse.jsonPath().getString("token"), secondResponse.jsonPath().getString("token"));
+        assertNotEquals(firstResponse.jsonPath().getString("accessToken"), secondResponse.jsonPath().getString("accessToken"));
     }
 }

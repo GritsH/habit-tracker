@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = "habit-tracker-app:latest"
+        IMAGE_NAME = "habit-tracker-app:1.1.0"
         TEST_NAMESPACE = "habit-tracker-test"
         DEV_NAMESPACE = "habit-tracker-dev"
         BASE_URL = "http://grits.test.habittracker.com"
@@ -49,12 +49,8 @@ pipeline {
 
         stage('Maven Build') {
             steps {
-                bat '''
-                mvn clean verify ^
-                -pl "!habit-tracker-api-tests" ^
-                -am ^
-                -DskipITs
-                '''
+                bat 'mvn clean install -DskipTests'
+                bat 'mvn -pl habit-tracker-server test'
             }
             post {
                 always {
@@ -65,6 +61,11 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
+                bat '''
+                for /f "tokens=*" %%i in ('minikube image list ^| findstr "habit-tracker-app"') do (
+                    minikube image rm %%i
+                )
+                '''
                 bat 'docker build -t %IMAGE_NAME% .'
                 bat 'minikube image load %IMAGE_NAME%'
             }

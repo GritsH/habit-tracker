@@ -26,7 +26,7 @@ public class DeleteHabitApiTest {
         AuthResponse loginResponse = UserOperation.loginUser();
 
         testUserId = loginResponse.getUser().getId();
-        testUserToken = loginResponse.getToken();
+        testUserToken = loginResponse.getAccessToken();
 
         HabitResponse createHabitResponse = HabitOperations.createHabit(testUserId, testUserToken);
         testHabitId = createHabitResponse.getId();

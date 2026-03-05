@@ -13,17 +13,20 @@ public class LogoutApiTest {
 
     private String testUserToken;
 
+    private String testUserRefreshToken;
+
     @BeforeEach
     public void setUp() {
         AuthResponse loginResponse = UserOperation.loginUser();
 
-        testUserToken = loginResponse.getToken();
+        testUserToken = loginResponse.getAccessToken();
+        testUserRefreshToken = loginResponse.getRefreshToken();
     }
 
     @Test
     @DisplayName("should logout a user with valid token")
     public void testLogout() {
-        Response response = UserOperation.logoutUser(testUserToken);
+        Response response = UserOperation.logoutUser(testUserToken, testUserRefreshToken);
 
         assertThat(response.statusCode()).isEqualTo(200);
     }
@@ -31,13 +34,13 @@ public class LogoutApiTest {
     @Test
     @DisplayName("should return 403 when logging out with the same token twice")
     public void testLogoutWithValidToken() {
-        assertThat(UserOperation.logoutUser(testUserToken).statusCode()).isEqualTo(200);
-        assertThat(UserOperation.logoutUser(testUserToken).statusCode()).isEqualTo(403);
+        assertThat(UserOperation.logoutUser(testUserToken, testUserRefreshToken).statusCode()).isEqualTo(200);
+        assertThat(UserOperation.logoutUser(testUserToken, testUserRefreshToken).statusCode()).isEqualTo(403);
     }
 
     @Test
     @DisplayName("should return 403 when logging out a user with invalid token")
     public void testLogoutWithInvalidToken() {
-        assertThat(UserOperation.logoutUser("invalid_token").statusCode()).isEqualTo(403);
+        assertThat(UserOperation.logoutUser("invalid_token", testUserRefreshToken).statusCode()).isEqualTo(403);
     }
 }

@@ -45,7 +45,8 @@ public class SecurityConfig {
                                 "/api-docs/**",
                                 "/actuator/**",
                                 "/v1/signup",
-                                "/v1/login"
+                                "/v1/login",
+                                "/v1/refresh"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

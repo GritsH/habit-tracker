@@ -30,7 +30,7 @@ public class GetUserApiTest {
         testUserId = loginResponse.getUser().getId();
         testEmail = loginResponse.getUser().getEmail();
         testUsername = loginResponse.getUser().getUsername();
-        testUserToken = loginResponse.getToken();
+        testUserToken = loginResponse.getAccessToken();
     }
 
     @Test

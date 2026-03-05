@@ -25,8 +25,11 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Value("${jwt.expiration}")
-    private long jwtExpirationMs;
+    @Value("${jwt.access.expiration}")
+    private long accessTokenExpiration;
+
+    @Value("${jwt.refresh.expiration}")
+    private long refreshTokenExpiration;
 
     private SecretKey secretKey;
 
@@ -40,33 +43,15 @@ public class JwtTokenProvider {
         this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String id) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
-        String jti = UUID.randomUUID().toString();
-
-        return Jwts.builder()
-                .subject(id)
-                .id(jti)
-                .issuedAt(now)
-                .expiration(expiryDate)
-                .signWith(secretKey, Jwts.SIG.HS512)
-                .compact();
+    public String generateAccessToken(String userId) {
+        return generateToken(userId, accessTokenExpiration);
     }
 
-    public String getUserIdFromToken(String token) {
-        Jws<Claims> claimsJws = parseToken(token);
-        return claimsJws.getPayload().getSubject();
-    }
-
-    public String getJtiFromToken(String token) {
-        Jws<Claims> claimsJws = parseToken(token);
-        return claimsJws.getPayload().getId();
-    }
-
-    public Date getExpirationFromToken(String token) {
-        Jws<Claims> claimsJws = parseToken(token);
-        return claimsJws.getPayload().getExpiration();
+    public String generateRefreshToken(String userId) {
+        String token = generateToken(userId, refreshTokenExpiration);
+        String key = "refresh:" + getJtiFromToken(token);
+        redisTemplate.opsForValue().set(key, userId, Duration.ofMillis(refreshTokenExpiration));
+        return token;
     }
 
     public boolean validateToken(String token) {
@@ -81,24 +66,60 @@ public class JwtTokenProvider {
         }
     }
 
-    public void invalidateToken(String token) {
+    public boolean validateRefreshToken(String token) {
         try {
+            parseToken(token);
             String jti = getJtiFromToken(token);
-            Date expiryDate = getExpirationFromToken(token);
-            long ttl = expiryDate.getTime() - System.currentTimeMillis();
-            if (ttl > 0) {
-                String key = blacklistPrefix + jti;
-                redisTemplate.opsForValue().set(key, "blacklisted", Duration.ofMillis(ttl));
-            }
+            return redisTemplate.hasKey("refresh:" + jti);
         } catch (JwtException e) {
-            System.err.println("Error invalidating token: " + e.getMessage());
+            return false;
         }
+    }
+
+    public void invalidateTokens(String accessToken, String refreshToken) {
+        deleteRefreshToken(refreshToken);
+        String accessJti = getJtiFromToken(accessToken);
+        Date expiryDate = getExpirationFromToken(accessToken);
+        long ttl = expiryDate.getTime() - System.currentTimeMillis();
+        if (ttl > 0) {
+            redisTemplate.opsForValue().set(blacklistPrefix + accessJti, "blacklisted", Duration.ofMillis(ttl));
+        }
+    }
+
+    public void deleteRefreshToken(String refreshToken) {
+        String refreshJti = getJtiFromToken(refreshToken);
+        redisTemplate.delete("refresh:" + refreshJti);
+    }
+
+    public String getUserIdFromToken(String token) {
+        return parseToken(token).getPayload().getSubject();
+    }
+
+    public String getJtiFromToken(String token) {
+        return parseToken(token).getPayload().getId();
+    }
+
+    public Date getExpirationFromToken(String token) {
+        return parseToken(token).getPayload().getExpiration();
+    }
+
+    private String generateToken(String id, long expiration) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + expiration);
+        String jti = UUID.randomUUID().toString();
+
+        return Jwts.builder()
+                   .subject(id)
+                   .id(jti)
+                   .issuedAt(now)
+                   .expiration(expiryDate)
+                   .signWith(secretKey, Jwts.SIG.HS512)
+                   .compact();
     }
 
     private boolean isTokenBlacklisted(String token) {
         String jti = getJtiFromToken(token);
-        String key = blacklistPrefix + jti;
-        return redisTemplate.hasKey(key);
+        return redisTemplate.hasKey(blacklistPrefix + jti);
     }
 
     private Jws<Claims> parseToken(String token) {
